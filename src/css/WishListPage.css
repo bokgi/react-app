@@ -1,0 +1,66 @@
+/* ====================
+   전체 페이지 기본 스타일
+   -SearchPage 공유
+   ==================== */
+
+
+/* ====================
+   헤더 스타일 
+   -SearchPage 공유
+   ==================== */
+   
+
+
+.main-content-wish {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row; 
+    gap: 60px;
+    width: 70%;
+    margin: 0;
+    box-sizing: border-box;
+    min-height: 0;
+    align-items: stretch;
+    overflow: hidden;
+    padding: 60px;
+}
+
+
+.blank-placeholder textarea {
+    width: 100%;
+    height: 90px;  
+    box-sizing: border-box;
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #ff8800;
+    border-radius: 4px;
+    resize: none;
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: bold;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+}
+
+.copylink-button{
+    font-size: 1em;
+    border: none;
+    background-color: transparent;
+    color: #007BFF;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
+    text-decoration: underline;
+}
+
+/* 버튼 클릭(포커스) 시 아웃라인 제거 */
+.copylink-button:focus {
+    outline: none; /* 아웃라인을 완전히 제거 */
+    /* border: none;  */ /* 필요하다면 border도 제거 */
+}
+
+/* 또는, 더 나은 접근성을 위해 :focus-visible 사용 */
+.copylink-button:focus-visible {
+    outline: none; /* 키보드 접근 시에만 아웃라인 제거 */
+}

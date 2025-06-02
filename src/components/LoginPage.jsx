@@ -113,31 +113,12 @@ const handleKakaoLogin = () => {
 
                     <button type="submit" className='Loginbutton'>로그인</button>
 
-                    <button
-                        type="button" // 폼 제출 버튼이 아니므로 type="button"으로 설정
-                        className='KakaoLoginImageButton' // 이 버튼 컨테이너를 위한 클래스 (CSS에서 기본 버튼 스타일 제거용)
-                        onClick={handleKakaoLogin} // 클릭 시 카카오 로그인 시작 함수 호출
-                        style={{ // 인라인 스타일 예시 (CSS 파일로 분리하는 것을 권장)
-                            border: 'none', // 기본 버튼 테두리 제거
-                            padding: 0, // 기본 버튼 패딩 제거
-                            backgroundColor: 'transparent', // 기본 버튼 배경색 제거
-                            cursor: 'pointer', // 마우스 오버 시 포인터 모양 변경
-                            display: 'block', // 블록 레벨 요소로 설정하여 별도 줄에 표시 (필요시 inline-block)
-                            margin: '10px auto 0', // 위쪽 버튼과의 간격 조절 및 중앙 정렬 (선택 사항)
-                            width: 'auto' // 이미지 크기에 맞게 너비 자동 조정
-                        }}
-                    >
-                        <img
-                            src="/images/kakao_login.png" // 사용할 이미지 파일 경로
-                            alt="카카오 로그인" // 접근성을 위한 대체 텍스트
-                            style={{ // 이미지 스타일 (필요에 따라 크기 조정 등)
-                                display: 'block', // 이미지 하단 미세한 공백 제거
-                                width: '100%', // 부모 버튼의 너비에 맞추거나 고정 값 설정
-                                maxWidth: '400px', // 이미지의 최대 너비 설정 (선택 사항)
-                                height: 'auto' // 가로 비율 유지
-                            }}
-                        />
-                    </button>
+                    <div class="container" style="display: flex; justify-content: center; align-content: center; align-items: center; flex-direction: column; margin: 200px auto; ">
+                        <h1>카카오 로그인</h1>
+                        <button onClick={handleKakaoLogin}>
+                            <img src="/images/kakao_login.png" />
+                        </button>
+                    </div>
 
                     <button type="button" onClick={goToSignup} className='goToSignupButton'>
                         아직 계정이 없으신가요? 회원가입하기

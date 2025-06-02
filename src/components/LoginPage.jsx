@@ -120,7 +120,6 @@ const handleKakaoLogin = () => {
                         
                     >
                         <img src="/images/kakao_login.png" alt="카카오 로고" style={{ marginRight: '8px', height: '20px', verticalAlign: 'middle' }} />
-                        카카오 로그인
                     </button>
 
                     <button type="button" onClick={goToSignup} className='goToSignupButton'>

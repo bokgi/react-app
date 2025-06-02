@@ -259,7 +259,7 @@ function SearchPage() {
         <div className="page-wrapper" >
 
         <header className="app-header">
-            <div onClick={scrollToTop} style={{ cursor: 'pointer' }} className="header-left">성북구 맛 GPT</div>
+            <div onClick={scrollToTop} style={{ cursor: 'pointer' }} className="header-left">맛 GPT</div>
             <div className="header-right">
 
             {user ? ( // 로그인 상태

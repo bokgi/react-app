@@ -62,6 +62,19 @@ const LoginPage = () => {
     navigate('/');
   };
 
+const KAKAO_REST_API_KEY = '55d2a867b5b86ca3c3b738518c2e03c5';
+const KAKAO_REDIRECT_URI = 'http://14.63.178.159'; // 카카오 Developers에 등록
+
+// 카카오 인증 서버로 요청할 URL
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+
+// 카카오 로그인 버튼 클릭 핸들러 함수
+const handleKakaoLogin = () => {
+    // 이 함수가 호출되면 사용자를 카카오 인증 페이지로 리다이렉트 시킵니다.
+    window.location.href = KAKAO_AUTH_URL;
+};
+
+
   return (
     <div className='main-content-login'>
         <header className="app-header">
@@ -99,6 +112,16 @@ const LoginPage = () => {
                     />
 
                     <button type="submit" className='Loginbutton'>로그인</button>
+
+                    <button
+                        type="button" // 폼 제출 버튼이 아니므로 type="button"으로 설정합니다.
+                        className='KakaoLoginButton'
+                        onClick={handleKakaoLogin} // 클릭 시 카카오 로그인 시작 함수 호출
+                        
+                    >
+                        <img src="/images/kakao_login.png" alt="카카오 로고" style={{ marginRight: '8px', height: '20px', verticalAlign: 'middle' }} />
+                        카카오 로그인
+                    </button>
 
                     <button type="button" onClick={goToSignup} className='goToSignupButton'>
                         아직 계정이 없으신가요? 회원가입하기

@@ -31,3 +31,4 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: dist/*
         target: /home/ubuntu/bokgi/react-app
+        strip_components: 1

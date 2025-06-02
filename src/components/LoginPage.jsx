@@ -128,7 +128,7 @@ const handleKakaoLogin = () => {
                         }}
                     >
                         <img
-                            src="/images/kakao_login.png" // 사용할 이미지 파일 경로
+                            src="/images/kakao_login_large_wide.png" // 사용할 이미지 파일 경로
                             alt="카카오 로그인" // 접근성을 위한 대체 텍스트
                             style={{ // 이미지 스타일 (필요에 따라 크기 조정 등)
                                 display: 'block', // 이미지 하단 미세한 공백 제거

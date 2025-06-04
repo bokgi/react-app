@@ -32,22 +32,22 @@ const KakaoCallbackPage = () => {
 
         const data = await ApiClient.KakaoLogin(code);
 
-            if (data.msg === "Success") {
+            if (data.ok) {
 
-                if (data.success) { 
+                if (data && data.success) { 
                     login(data);
                     navigate('/', { replace: true });
                 } else {
                     console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
-                    navigate('/login');
+                    navigate('/login', { replace: true });
                 }
             } else {
                 console.error('백엔드 API 호출 실패:', data.msg || `Status ${data.status}`);
-                navigate('/login');
+                navigate('/login', { replace: true });
         }
         } catch (error) {
             console.error('백엔드 통신 중 오류 발생:', error);
-            navigate('/login');
+            navigate('/login', { replace: true });
         }
     };
 

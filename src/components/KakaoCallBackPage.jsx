@@ -32,14 +32,11 @@ const KakaoCallbackPage = () => {
 
         const data = await ApiClient.KakaoLogin(code);
 
-        console.log(data);
-
             if (data.msg === "Success") {
-                console.log('백엔드 카카오 로그인 처리 결과:', data);
 
                 if (data.success) { 
                     login(data);
-                    navigate('/');
+                    navigate('/', { replace: true });
                 } else {
                     console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
                     navigate('/login');

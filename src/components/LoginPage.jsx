@@ -39,7 +39,7 @@ const LoginPage = () => {
             if (data.code === 0) {
                 login(data); // AuthContext 내 login 함수를 호출하여 전역 상태 업데이트
                 displayMessage(`환영합니다, ${data.name}님!`, 'success');
-                navigate('/');
+                navigate('/', { replace: true });
             } else {
                 displayMessage('아이디 또는 비밀번호가 잘못되었습니다.', 'error');
             }
@@ -115,7 +115,7 @@ const LoginPage = () => {
                 type="button"
                 className='KakaoLoginImageButton'
                 onClick={handleKakaoLogin}
-                style={{ border: 'none', padding: 0, backgroundColor: 'transparent', cursor: 'pointer', display: 'block', margin: '10px auto 0', width: 'auto' }}
+                style={{ border: 'none', padding: 0, backgroundColor: 'transparent', cursor: 'pointer', display: 'block', width: 'auto' }}
             >
                 <img
                     src="/images/kakao_login_large_wide.png"

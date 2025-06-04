@@ -32,6 +32,8 @@ const KakaoCallbackPage = () => {
 
         const response = await ApiClient.KakaoLogin(code);
 
+        console.log(response);
+
             if (response.ok) {
                 const data = await response.json();
                 console.log('백엔드 카카오 로그인 처리 결과:', data);

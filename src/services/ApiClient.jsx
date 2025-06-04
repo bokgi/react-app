@@ -173,7 +173,7 @@ class ApiClient {
         }
     }
 
-    // =============================================================================================
+    // 찜 목록 링크=============================================================================================
 
 
     // 로그인 token 전송 -> userId -> 찜 목록 링크 토큰 받아오기
@@ -219,6 +219,32 @@ class ApiClient {
 
         } catch (error) {
             console.error('찜 목록을 불러오는 중 오류 발생:', error);
+            throw error;
+        }
+    }
+
+    
+// 카카오 회원가입 및 로그인 =============================================================================================    
+
+    static async KakaoLogin(code){ 
+
+        // const KakaoEndpoint = ApiClient.SERVER_URL + "/api/wish" + "/share" + "?token=" + wishListToken
+
+        try {
+             const response = await fetch(KakaoEndpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                }),
+            });
+
+            const result = await response.json(); 
+            return result; // user login 정보 (AuthContext)
+
+        } catch (error) {
+            console.error('카카오 로그인 중 오류 발생:', error);
             throw error;
         }
     }

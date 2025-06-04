@@ -6,145 +6,128 @@ import { useAuth } from '../contexts/AuthContext.jsx';
 
 const LoginPage = () => {
     
-  const [id, setId] = useState('');
-  const [password, setPassword] = useState('');
-  const [loginMessage, setLoginMessage] = useState('');
-  const [messageType, setMessageType] = useState('');
+    const [id, setId] = useState('');
+    const [password, setPassword] = useState('');
+    const [loginMessage, setLoginMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
 
-  const navigate = useNavigate();
-  const { login } = useAuth();
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
-  const displayMessage = (message, type) => {
-    setLoginMessage(message);
-    setMessageType(type); // 'success' 또는 'error' 등으로 설정 가능
-    setTimeout(() => {
-      setLoginMessage('');
-      setMessageType('');
-    }, 2000);
-  };
+    const displayMessage = (message, type) => {
+        setLoginMessage(message);
+        setMessageType(type); // 'success' 또는 'error' 등으로 설정 가능
+        setTimeout(() => {
+        setLoginMessage('');
+        setMessageType('');
+        }, 2000);
+    };
 
 
-  const handleLogin = async (e) => {
+    const handleLogin = async (e) => {
 
-    e.preventDefault();
-    const userCredentials = { id, password };
-    // 로그인 시 메시지 초기화
-    setLoginMessage('');
-    setMessageType('');
-    try {
-      const response = await ApiClient.login(userCredentials);
-      
-      if (response.ok) {
-        const data = await response.json();
-        if (data.code === 0) {
-            login(data); // AuthContext 내 login 함수를 호출하여 전역 상태 업데이트
-            displayMessage(`환영합니다, ${data.name}님!`, 'success');
-            navigate('/');
+        e.preventDefault();
+        const userCredentials = { id, password };
+        // 로그인 시 메시지 초기화
+        setLoginMessage('');
+        setMessageType('');
+        try {
+        const response = await ApiClient.login(userCredentials);
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.code === 0) {
+                login(data); // AuthContext 내 login 함수를 호출하여 전역 상태 업데이트
+                displayMessage(`환영합니다, ${data.name}님!`, 'success');
+                navigate('/');
+            } else {
+                displayMessage('아이디 또는 비밀번호가 잘못되었습니다.', 'error');
+            }
         } else {
-            displayMessage('아이디 또는 비밀번호가 잘못되었습니다.', 'error');
+            const errorData = await response.json();
+            displayMessage(errorData.message || `로그인 실패: Status ${response.status}`, 'error');
         }
-      } else {
-         const errorData = await response.json();
-         displayMessage(errorData.message || `로그인 실패: Status ${response.status}`, 'error');
-      }
-    } catch (error) {
-      console.error('로그인 중 오류 발생:', error);
-      displayMessage('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
-    }
-  };
+        } catch (error) {
+        console.error('로그인 중 오류 발생:', error);
+        displayMessage('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
+        }
+    };
 
 
-  const goToSignup = () => {
-      navigate('/signUp');
-  };
+    const goToSignup = () => {
+        navigate('/signUp');
+    };
 
-  const goToSearch = () => {
-    navigate('/');
-  };
+    const goToSearch = () => {
+        navigate('/');
+    };
 
-const KAKAO_REST_API_KEY = '55d2a867b5b86ca3c3b738518c2e03c5';
-const KAKAO_REDIRECT_URI = 'http://14.63.178.159'; // 카카오 Developers에 등록
+    const KAKAO_REST_API_KEY = '55d2a867b5b86ca3c3b738518c2e03c5';
+    const KAKAO_REDIRECT_URI = 'http://14.63.178.159/kakao';
 
-// 카카오 인증 서버로 요청할 URL
-const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+    // 카카오 인증 서버로 요청할 URL
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 
-// 카카오 로그인 버튼 클릭 핸들러 함수
-const handleKakaoLogin = () => {
-    // 이 함수가 호출되면 사용자를 카카오 인증 페이지로 리다이렉트 시킵니다.
-    window.location.href = KAKAO_AUTH_URL;
-};
+    // 카카오 로그인 버튼 클릭 핸들러 함수
+    const handleKakaoLogin = () => {
+        // 카카오 인증 페이지로 리다이렉트
+        window.location.href = KAKAO_AUTH_URL;
+    };
 
 
   return (
     <div className='main-content-login'>
         <header className="app-header">
-          <div onClick={goToSearch} style={{ cursor: 'pointer' }} className="header-left">맛 GPT</div>
-          <div className="header-right"></div>
-        </header>
+            <div onClick={goToSearch} style={{ cursor: 'pointer' }} className="header-left">맛 GPT</div>
+            <div className="header-right"></div>
+        </header>    
 
-        
+        {/* 로그인 실패 메시지 */}
+        {loginMessage && (
+            <div className={`message ${messageType}`}>
+                <p>{loginMessage}</p>
+            </div>
+        )}
+        <p></p>
 
-                {/* 로그인 실패 메시지 */}
-                {loginMessage && (
-                    <div className={`message ${messageType}`}>
-                      <p>{loginMessage}</p>
-                    </div>
-                )}
-                <p></p>
+        <form onSubmit={handleLogin} className='form'>
+            <h2 className='title'>로그인</h2>
+            <input
+                type="text"
+                placeholder="아이디"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                className='input'
+                required
+            />
+            <input
+                type="password"
+                placeholder="비밀번호"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className='input'
+                required
+            />
 
-                <form onSubmit={handleLogin} className='form'>
-                    <h2 className='title'>로그인</h2>
-                    <input
-                    type="text"
-                    placeholder="아이디"
-                    value={id}
-                    onChange={(e) => setId(e.target.value)}
-                    className='input'
-                    required
-                    />
-                    <input
-                    type="password"
-                    placeholder="비밀번호"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className='input'
-                    required
-                    />
+            <button type="submit" className='Loginbutton'>로그인</button>
 
-                    <button type="submit" className='Loginbutton'>로그인</button>
+            <button
+                type="button"
+                className='KakaoLoginImageButton'
+                onClick={handleKakaoLogin}
+                style={{ border: 'none', padding: 0, backgroundColor: 'transparent', cursor: 'pointer', display: 'block', margin: '10px auto 0', width: 'auto' }}
+            >
+                <img
+                    src="/images/kakao_login_large_wide.png"
+                    alt="카카오 로그인"
+                    style={{ display: 'block', width: '100%', maxWidth: '400px', height: 'auto' }}
+                />
+            </button>
 
-                    <button
-                        type="button" // 폼 제출 버튼이 아니므로 type="button"으로 설정
-                        className='KakaoLoginImageButton' // 이 버튼 컨테이너를 위한 클래스 (CSS에서 기본 버튼 스타일 제거용)
-                        onClick={handleKakaoLogin} // 클릭 시 카카오 로그인 시작 함수 호출
-                        style={{ // 인라인 스타일 예시 (CSS 파일로 분리하는 것을 권장)
-                            border: 'none', // 기본 버튼 테두리 제거
-                            padding: 0, // 기본 버튼 패딩 제거
-                            backgroundColor: 'transparent', // 기본 버튼 배경색 제거
-                            cursor: 'pointer', // 마우스 오버 시 포인터 모양 변경
-                            display: 'block', // 블록 레벨 요소로 설정하여 별도 줄에 표시 (필요시 inline-block)
-                            margin: '10px auto 0', // 위쪽 버튼과의 간격 조절 및 중앙 정렬 (선택 사항)
-                            width: 'auto' // 이미지 크기에 맞게 너비 자동 조정
-                        }}
-                    >
-                        <img
-                            src="/images/kakao_login_large_wide.png" // 사용할 이미지 파일 경로
-                            alt="카카오 로그인" // 접근성을 위한 대체 텍스트
-                            style={{ // 이미지 스타일 (필요에 따라 크기 조정 등)
-                                display: 'block', // 이미지 하단 미세한 공백 제거
-                                width: '100%', // 부모 버튼의 너비에 맞추거나 고정 값 설정
-                                maxWidth: '400px', // 이미지의 최대 너비 설정 (선택 사항)
-                                height: 'auto' // 가로 비율 유지
-                            }}
-                        />
-                    </button>
-
-                    <button type="button" onClick={goToSignup} className='goToSignupButton'>
-                        아직 계정이 없으신가요? 회원가입하기
-                    </button>
-                </form>
-
-        
+            <button type="button" onClick={goToSignup} className='goToSignupButton'>
+                아직 계정이 없으신가요? 회원가입하기
+            </button>
+        </form>
     </div>
   );
 };

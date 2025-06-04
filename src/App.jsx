@@ -8,6 +8,7 @@ import SearchPage from './components/SearchPage';
 import ResponsePage from './components/ResponsePage';
 import WishListPage from './components/WishListPage';
 import SharePage from './components/SharePage';
+import KakaoCallbackPage from './components/KakaoCallBackPage';
 
 
 function ProtectedRoute({ element }) { // 보호 페이지 조정
@@ -53,6 +54,10 @@ function App() {
             {/* 찜 목록 공유 페이지 */}
             <Route
                 path="/wish/share" element={<SharePage />}
+            />
+            {/* 카카오 로그인 대기 페이지 */}
+            <Route
+                path="/kakao" element={<AuthRedirect element={<KakaoCallbackPage />} />} 
             />
         </Routes>
       </AuthProvider>

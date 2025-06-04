@@ -32,8 +32,8 @@ const KakaoCallbackPage = () => {
 
         const data = await ApiClient.KakaoLogin(code);
 
-            if (data.ok) {
-
+            if (data.success) {
+                
                 if (data && data.success) { 
                     login(data);
                     navigate('/', { replace: true });

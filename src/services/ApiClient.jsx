@@ -228,7 +228,7 @@ class ApiClient {
 
     static async KakaoLogin(code){ 
 
-        const KakaoEndpoint = ApiClient.SERVER_URL + "/api/sign-api/kakao-sign-in"
+        const KakaoEndpoint = ApiClient.SERVER_URL + "/api/sign-api/kakao-sign-in?code=" + code
 
         try {
              const response = await fetch(KakaoEndpoint, {

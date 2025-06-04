@@ -57,7 +57,8 @@ html, body {
     border-radius: 4px;
     border: none;
     background-color: #4CAF50;
-    color: white;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
     cursor: pointer;
     text-align: center;
     display: inline-block;

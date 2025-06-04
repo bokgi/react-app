@@ -30,9 +30,9 @@ const KakaoCallbackPage = () => {
     const sendCodeToBackend = async (code) => {
         try {
 
-        const response = await ApiClient.KakaoLogin(code);
+        const data = await ApiClient.KakaoLogin(code);
 
-        console.log(response);
+        console.log(data);
 
             if (response.ok) {
                 console.log('백엔드 카카오 로그인 처리 결과:', data);
@@ -41,7 +41,7 @@ const KakaoCallbackPage = () => {
                     login(data);
                     navigate('/');
                 } else {
-                    console.error('백엔드 카카오 로그인 처리 실패:', data.message);
+                    console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
                     navigate('/login');
                 }
             } else {

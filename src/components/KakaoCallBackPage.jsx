@@ -34,7 +34,7 @@ const KakaoCallbackPage = () => {
 
         console.log(data);
 
-            if (data.ok) {
+            if (data.msg === "Success") {
                 console.log('백엔드 카카오 로그인 처리 결과:', data);
 
                 if (data.success) { 

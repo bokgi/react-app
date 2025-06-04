@@ -34,7 +34,7 @@ const KakaoCallbackPage = () => {
 
         console.log(data);
 
-            if (response.ok) {
+            if (data.ok) {
                 console.log('백엔드 카카오 로그인 처리 결과:', data);
 
                 if (data.success) { 
@@ -45,8 +45,7 @@ const KakaoCallbackPage = () => {
                     navigate('/login');
                 }
             } else {
-                const errorData = await response.json();
-                console.error('백엔드 API 호출 실패:', errorData.message || `Status ${response.status}`);
+                console.error('백엔드 API 호출 실패:', data.msg || `Status ${data.status}`);
                 navigate('/login');
         }
         } catch (error) {

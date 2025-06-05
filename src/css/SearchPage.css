@@ -142,6 +142,7 @@ body {
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
 }
 
 .main-title {
@@ -573,4 +574,40 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+
+
+.recent-searches-dropdown {
+  position: absolute; /* 검색창 기준으로 위치 설정 */
+  top: 100%; /* 검색창 바로 아래에 위치 */
+  left: 0;
+  width: 100%; /* 검색창 너비와 맞추거나 필요에 따라 조정 */
+  background-color: white; /* 배경색 지정 */
+  border: 1px solid #ccc; /* 테두리 추가 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  z-index: 10; /* 다른 요소 위에 표시 */
+  max-height: 200px; /* 최대 높이 설정 (스크롤바 생성) */
+  overflow-y: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
+}
+
+.recent-searches-dropdown h4 {
+  margin: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.recent-searches-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-searches-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.recent-searches-dropdown li:hover {
+  background-color: #f0f0f0; /* 호버 시 배경색 변경 */
 }

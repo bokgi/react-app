@@ -130,6 +130,7 @@ function SearchPage() {
 
         console.log("검색어:", searchTerm);
         setIsLoading(true); // API 호출 전 로딩 상태를 true로 설정
+
         try {
             const result = await ApiClient.search(searchTerm, user.token);
             console.log("검색결과: ", result);
@@ -139,6 +140,22 @@ function SearchPage() {
                 setIsLoading(false); // 로딩 상태 해제
                 logout();
                 return; 
+            }
+
+
+            // 로그인 상태일 때만 최근 검색 기록 저장
+            if (user && user.name) { // user.userId는 실제 사용자 정보 객체의 고유 ID 필드명으로 수정
+                const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
+
+                // Local Storage에 저장할 새로운 목록 생성
+                const currentHistory = JSON.parse(localStorage.getItem(userSearchHistoryKey)) || [];
+                const filteredHistory = currentHistory.filter(item => item !== query); // 중복 제거
+                const newHistory = [query, ...filteredHistory]; // 새로운 검색어 맨 앞에 추가
+                const limitedHistory = newHistory.slice(0, 10); // 예: 최대 10개까지 저장
+
+                // 상태와 Local Storage 업데이트
+                setRecentSearches(limitedHistory); // 상태 업데이트
+                localStorage.setItem(userSearchHistoryKey, JSON.stringify(limitedHistory)); // Local Storage 저장
             }
             
             navigate('/response', { state: { searchTerm: searchTerm, user: user, result: result } });
@@ -254,6 +271,61 @@ function SearchPage() {
     }, []);
 
 
+
+    // 최근 검색 localStorage
+
+    const [recentSearches, setRecentSearches] = useState([]);
+
+    useEffect(() => {
+
+        if (user && user.name) { 
+        const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
+        const storedHistory = localStorage.getItem(userSearchHistoryKey);
+
+        if (storedHistory) {
+            try {
+            setRecentSearches(JSON.parse(storedHistory));
+            } catch (error) {
+            console.error("Failed to parse search history from localStorage", error);
+            setRecentSearches([]); // 파싱 오류 시 초기화
+            }
+        } else {
+            setRecentSearches([]); // 저장된 기록이 없을 경우 초기화
+        }
+        } else {
+        // 로그인되지 않았거나 사용자 이름이 없는 경우 검색 기록 초기화
+        setRecentSearches([]);
+        }
+    }, [user]); // user 객체가 변경될 때마다 이 effect 실행
+
+
+    // ★ 목록 표시 여부 상태 추가
+    const [isHistoryVisible, setIsHistoryVisible] = useState(false);
+    
+    // ★ 입력 필드에 포커스 시 목록 표시
+    const handleInputFocus = () => {
+        if (user && recentSearches.length > 0) { // 로그인 상태이고 기록이 있을 때만
+        setIsHistoryVisible(true);
+        }
+    };
+
+    // ★ 입력 필드에서 포커스 잃을 시 목록 숨김 (클릭 이벤트 처리를 위한 딜레이 포함)
+    const handleInputBlur = () => {
+        // 클릭 이벤트가 먼저 발생하도록 약간의 딜레이를 줍니다.
+        setTimeout(() => {
+        setIsHistoryVisible(false);
+        }, 100); // 100ms 딜레이
+    };
+
+    // ★ 최근 검색어 클릭 시 검색 필드 채우고 목록 숨김
+    const handleRecentSearchClick = (item) => {
+        setSearchTerm(item);
+        setIsHistoryVisible(false); // 클릭 후 목록 숨김
+        // 클릭 후 바로 검색 실행 원하면 여기에 handleSearchSubmit() 호출
+        // 예: handleSearchSubmit(null, item); // item을 인자로 넘겨 바로 검색
+    };
+
+
   
     return (
         <div className="page-wrapper" >
@@ -294,10 +366,28 @@ function SearchPage() {
                     placeholder={user ? "주변 맛집을 검색해보세요!  ex) 혼밥하기 좋은 음식점" : "로그인 후 검색해보세요!"}
                     value={searchTerm}
                     onChange={handleInputChange}
+                    onFocus={handleInputFocus} 
+                    onBlur={handleInputBlur}
                 />
                 {/* 돋보기 아이콘 */}
                 <button type="submit" className="search-button"></button>
                 </div>
+
+                {/* ★ 최근 검색어 목록 조건부 렌더링 */}
+                {user && recentSearches.length > 0 && isHistoryVisible && (
+                // ★ 이 div/ul에 스타일을 적용하여 검색창 아래에 위치시키고 드롭다운처럼 보이게 합니다.
+                <div className="recent-searches-dropdown">
+                    <h4>최근 검색어</h4>
+                    <ul>
+                    {recentSearches.map((item) => (
+                        <li key={item} onClick={() => handleRecentSearchClick(item)} style={{ cursor: 'pointer' }}>
+                        {item}
+                        </li>
+                    ))}
+                    </ul>
+                </div>
+                )}
+
             </form>
             </div>
 

@@ -310,7 +310,7 @@ function SearchPage() {
     // 목록 숨김
     const handleInputBlur = () => {
         setTimeout(() => {
-        setIsHistoryVisible(true);
+        setIsHistoryVisible(false);
         }, 100); // 100ms 딜레이
     };
 
@@ -348,7 +348,7 @@ function SearchPage() {
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////
   
-
+    
     return (
         <div className="page-wrapper" >
 

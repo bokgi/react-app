@@ -590,7 +590,6 @@ body {
     z-index: 10; 
     max-height: 240px; 
     overflow-y: auto; 
-    padding-right: 20px;
 }
 
 .recent-searches-header {
@@ -606,7 +605,8 @@ body {
     color: #007bff;
     font-size: 0.8em;
     cursor: pointer;
-    padding: 0 5px;
+    padding: 0;
+    padding-right: 20px;
 }
 
 .clear-all-searches-button:hover {

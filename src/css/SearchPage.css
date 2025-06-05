@@ -142,7 +142,6 @@ body {
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
-    position: relative;
 }
 
 .main-title {
@@ -174,7 +173,7 @@ body {
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 0.9);
     margin: 0 auto;
-    
+    position: relative;
 }
 
 
@@ -577,6 +576,9 @@ body {
 }
 
 
+/* ====================
+   최근 검색어 창
+   ==================== */
 
 .recent-searches-dropdown {
   position: absolute; /* 검색창 기준으로 위치 설정 */

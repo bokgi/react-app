@@ -604,7 +604,6 @@ body {
     font-weight: bold;
     padding-left: 20px;
     font-size: 1em;
-    height: 50px;
 }
 
 .recent-search-item {
@@ -614,7 +613,7 @@ body {
     padding: 10px 0; 
     cursor: pointer;
     text-align: left;
-    height: 30px;
+    height: 35px;
 }
 
 .recent-search-item:hover {

@@ -601,15 +601,15 @@ body {
 .clear-all-searches-button {
     background: none;
     border: none;
-    color: #007bff;
+    color: #999;
     font-size: 1em;
     cursor: pointer;
     padding: 0;
-    padding-right: 40px;
+    padding-right: 30px;
 }
 
 .clear-all-searches-button:hover {
-    text-decoration: underline; 
+    color: #333;
 }
 
 .clear-all-searches-button:focus {

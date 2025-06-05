@@ -603,7 +603,8 @@ body {
     font-family: "Noto Sans KR", sans-serif;
     font-weight: bold;
     padding-left: 20px;
-    font-size: 1.5em;
+    font-size: 1em;
+    height: 50px;
 }
 
 .recent-search-item {
@@ -613,6 +614,7 @@ body {
     padding: 10px 0; 
     cursor: pointer;
     text-align: left;
+    height: 50px;
 }
 
 .recent-search-item:hover {

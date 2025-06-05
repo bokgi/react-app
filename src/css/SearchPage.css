@@ -606,6 +606,8 @@ body {
     cursor: pointer;
     padding: 0;
     padding-right: 30px;
+    font-family: "Noto Sans KR", sans-serif;
+    font-weight: bold;
 }
 
 .clear-all-searches-button:hover {

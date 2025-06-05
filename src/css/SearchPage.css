@@ -596,17 +596,16 @@ body {
     display: flex; /* Flexbox 사용 */
     justify-content: space-between; /* 제목과 버튼을 양 끝으로 분산 */
     align-items: center; /* 수직 중앙 정렬 */
-    padding: 10px 0; /* 상하 패딩 */
 }
 
 .clear-all-searches-button {
     background: none;
     border: none;
     color: #007bff;
-    font-size: 0.8em;
+    font-size: 1em;
     cursor: pointer;
     padding: 0;
-    padding-right: 20px;
+    padding-right: 40px;
 }
 
 .clear-all-searches-button:hover {

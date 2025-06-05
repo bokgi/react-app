@@ -130,6 +130,7 @@ function SearchPage() {
 
         console.log("검색어:", searchTerm);
         setIsLoading(true); // API 호출 전 로딩 상태를 true로 설정
+        const query = searchTerm.trim();
 
         try {
             const result = await ApiClient.search(searchTerm, user.token);
@@ -163,8 +164,6 @@ function SearchPage() {
         } catch (error) {
             console.error("검색 중 오류 발생:", error);
             alert("검색 중 오류가 발생했습니다.\n다시 검색하시거나, 다시 로그인 해 주세요.");
-            logout();
-            navigate("/login");
         } finally {
             setIsLoading(false); // API 호출 완료 후 로딩 상태를 false로 설정
         }

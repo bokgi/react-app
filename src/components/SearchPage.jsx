@@ -278,82 +278,77 @@ function SearchPage() {
     useEffect(() => {
 
         if (user && user.name) { 
-        const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
-        const storedHistory = localStorage.getItem(userSearchHistoryKey);
+            const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
+            const storedHistory = localStorage.getItem(userSearchHistoryKey);
 
-        if (storedHistory) {
-            try {
-            setRecentSearches(JSON.parse(storedHistory));
-            } catch (error) {
-            console.error("Failed to parse search history from localStorage", error);
-            setRecentSearches([]); // 파싱 오류 시 초기화
+            if (storedHistory) {
+                try {
+                setRecentSearches(JSON.parse(storedHistory));
+                } catch (error) {
+                console.error("Failed to parse search history from localStorage", error);
+                setRecentSearches([]); // 오류 시 초기화
+                }
+            } else {
+                setRecentSearches([]); // 저장된 기록이 없을 경우 초기화
             }
         } else {
-            setRecentSearches([]); // 저장된 기록이 없을 경우 초기화
+            setRecentSearches([]);
         }
-        } else {
-        // 로그인되지 않았거나 사용자 이름이 없는 경우 검색 기록 초기화
-        setRecentSearches([]);
-        }
-    }, [user]); // user 객체가 변경될 때마다 이 effect 실행
+    }, [user]);
 
 
-    // ★ 목록 표시 여부 상태 추가
+    // 목록 표시 상태
     const [isHistoryVisible, setIsHistoryVisible] = useState(false);
     
-    // ★ 입력 필드에 포커스 시 목록 표시
+    // 포커스 시 목록 표시
     const handleInputFocus = () => {
-        if (user && recentSearches.length > 0) { // 로그인 상태이고 기록이 있을 때만
+        if (user && recentSearches.length > 0) {
         setIsHistoryVisible(true);
         }
     };
 
-    // ★ 입력 필드에서 포커스 잃을 시 목록 숨김 (클릭 이벤트 처리를 위한 딜레이 포함)
+    // 목록 숨김
     const handleInputBlur = () => {
-        // 클릭 이벤트가 먼저 발생하도록 약간의 딜레이를 줍니다.
         setTimeout(() => {
         setIsHistoryVisible(false);
         }, 100); // 100ms 딜레이
     };
 
-    // ★ 최근 검색어 클릭 시 검색 필드 채우고 목록 숨김
+    // 최근 검색어 클릭
     const handleRecentSearchClick = (item) => {
         setSearchTerm(item);
-        setIsHistoryVisible(false); // 클릭 후 목록 숨김
-        // 클릭 후 바로 검색 실행 원하면 여기에 handleSearchSubmit() 호출
-        // 예: handleSearchSubmit(null, item); // item을 인자로 넘겨 바로 검색
+        setIsHistoryVisible(false);
     };
 
         // ★ 최근 검색어 삭제 핸들러
-    const handleRemoveSearchTerm = (event, itemToRemove) => {
+    const handleRemoveRecentSearchTerm = (event, itemToRemove) => {
         event.stopPropagation(); 
 
-        // 사용자가 로그인 상태인지 확인
         if (!user || !user.name) { 
             console.warn("로그인되지 않은 상태에서 검색 기록 삭제 시도");
-            // 또는 사용자에게 알림: alert("로그인 후 이용하실 수 있습니다.");
+            alert("로그인 후 이용하실 수 있습니다.");
             return;
         }
 
         const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
 
-        // 현재 recentSearches 상태에서 제거할 항목을 필터링합니다.
+        // 제거할 항목을 필터링
         const updatedSearches = recentSearches.filter(item => item !== itemToRemove);
-
         // 상태 업데이트
         setRecentSearches(updatedSearches);
-
         // localStorage 업데이트
         localStorage.setItem(userSearchHistoryKey, JSON.stringify(updatedSearches));
-
-        // 만약 삭제 후 목록에 남은 항목이 없다면 목록을 숨깁니다.
+        // 남은 항목이 없다면 목록 숨기기
         if (updatedSearches.length === 0) {
             setIsHistoryVisible(false);
         }
     };
 
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
   
+    
     return (
         <div className="page-wrapper" >
 
@@ -402,20 +397,18 @@ function SearchPage() {
 
                 {/* ★ 최근 검색어 목록 조건부 렌더링 */}
                 {user && recentSearches.length > 0 && isHistoryVisible && (
-                // ★ 이 div/ul에 스타일을 적용하여 검색창 아래에 위치시키고 드롭다운처럼 보이게 합니다.
                 <div className="recent-searches-dropdown" onMouseDown={(e) => e.preventDefault()}>
                     <h4>최근 검색어</h4>
                     <ul>
                         {recentSearches.map((item, index) => (
-                            <li key={item} /* item을 key로 사용 */ className="recent-search-item"> {/* 클래스 추가 */}
-                                {/* 검색어 텍스트 부분 - 클릭 시 검색 실행 */}
+                            <li key={item} className="recent-search-item">
                                 <span className="search-text" onClick={() => handleRecentSearchClick(item)}>
                                     {item}
                                 </span>
                                 {/* 삭제 버튼 */}
                                 <button
                                     className="remove-search-button"
-                                    onClick={(e) => handleRemoveSearchTerm(e, item)} // 클릭 이벤트 연결
+                                    onClick={(e) => handleRemoveRecentSearchTerm(e, item)} // 클릭 이벤트 연결
                                     aria-label={`"${item}" 검색어 삭제`} // 접근성 향상
                                 >
                                     &times; {/* 'X' 모양 문자 */}

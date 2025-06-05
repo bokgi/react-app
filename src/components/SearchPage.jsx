@@ -403,7 +403,7 @@ function SearchPage() {
                 {/* ★ 최근 검색어 목록 조건부 렌더링 */}
                 {user && recentSearches.length > 0 && isHistoryVisible && (
                 // ★ 이 div/ul에 스타일을 적용하여 검색창 아래에 위치시키고 드롭다운처럼 보이게 합니다.
-                <div className="recent-searches-dropdown">
+                <div className="recent-searches-dropdown" onMouseDown={(e) => e.preventDefault()}>
                     <h4>최근 검색어</h4>
                     <ul>
                         {recentSearches.map((item, index) => (

@@ -344,11 +344,28 @@ function SearchPage() {
         }
     };
 
+    // ★ 최근 검색어 전체 삭제 핸들러
+    const handleClearAllSearches = () => {
+
+        if (!user || !user.name) { 
+            console.warn("로그인되지 않은 상태에서 검색 기록 전체 삭제 시도");
+            return;
+        }
+
+        const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
+        // 상태 초기화 (빈 배열)
+        setRecentSearches([]);
+        // localStorage에서 해당 사용자 기록 삭제
+        localStorage.removeItem(userSearchHistoryKey);
+        // 목록 숨김
+        setIsHistoryVisible(false);
+    };
+
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////
   
-    
+
     return (
         <div className="page-wrapper" >
 
@@ -398,7 +415,18 @@ function SearchPage() {
                 {/* ★ 최근 검색어 목록 조건부 렌더링 */}
                 {user && recentSearches.length > 0 && isHistoryVisible && (
                 <div className="recent-searches-dropdown" onMouseDown={(e) => e.preventDefault()}>
-                    <h4>최근 검색어</h4>
+
+                    <div className="recent-searches-header">
+                        <h4>최근 검색어</h4>
+                        <button
+                            className="clear-all-searches-button"
+                            onClick={handleClearAllSearches} // 클릭 이벤트 연결
+                            aria-label="모든 최근 검색어 삭제" // 접근성 향상
+                        >
+                            전체 삭제
+                        </button>
+                    </div>
+
                     <ul>
                         {recentSearches.map((item, index) => (
                             <li key={item} className="recent-search-item">

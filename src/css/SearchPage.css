@@ -588,7 +588,7 @@ body {
     border: 1px solid #ccc; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 10; 
-    max-height: 200px; 
+    max-height: 0px; 
     overflow-y: auto; 
 }
 
@@ -604,6 +604,7 @@ body {
     font-weight: bold;
     padding-left: 20px;
     font-size: 1em;
+    height: 50px;
 }
 
 .recent-search-item {

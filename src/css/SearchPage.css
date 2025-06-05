@@ -602,6 +602,8 @@ body {
     text-align: left;
     font-family: "Noto Sans KR", sans-serif;
     font-weight: bold;
+    padding-left: 20px;
+    font-size: 1.5em;
 }
 
 .recent-search-item {

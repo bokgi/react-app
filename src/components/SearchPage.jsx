@@ -324,6 +324,34 @@ function SearchPage() {
         // 예: handleSearchSubmit(null, item); // item을 인자로 넘겨 바로 검색
     };
 
+        // ★ 최근 검색어 삭제 핸들러
+    const handleRemoveSearchTerm = (event, itemToRemove) => {
+        event.stopPropagation(); 
+
+        // 사용자가 로그인 상태인지 확인
+        if (!user || !user.name) { 
+            console.warn("로그인되지 않은 상태에서 검색 기록 삭제 시도");
+            // 또는 사용자에게 알림: alert("로그인 후 이용하실 수 있습니다.");
+            return;
+        }
+
+        const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
+
+        // 현재 recentSearches 상태에서 제거할 항목을 필터링합니다.
+        const updatedSearches = recentSearches.filter(item => item !== itemToRemove);
+
+        // 상태 업데이트
+        setRecentSearches(updatedSearches);
+
+        // localStorage 업데이트
+        localStorage.setItem(userSearchHistoryKey, JSON.stringify(updatedSearches));
+
+        // 만약 삭제 후 목록에 남은 항목이 없다면 목록을 숨깁니다.
+        if (updatedSearches.length === 0) {
+            setIsHistoryVisible(false);
+        }
+    };
+
 
   
     return (
@@ -378,11 +406,22 @@ function SearchPage() {
                 <div className="recent-searches-dropdown">
                     <h4>최근 검색어</h4>
                     <ul>
-                    {recentSearches.map((item) => (
-                        <li key={item} onClick={() => handleRecentSearchClick(item)} style={{ cursor: 'pointer' }}>
-                        {item}
-                        </li>
-                    ))}
+                        {recentSearches.map((item, index) => (
+                            <li key={item} /* item을 key로 사용 */ className="recent-search-item"> {/* 클래스 추가 */}
+                                {/* 검색어 텍스트 부분 - 클릭 시 검색 실행 */}
+                                <span className="search-text" onClick={() => handleRecentSearchClick(item)}>
+                                    {item}
+                                </span>
+                                {/* 삭제 버튼 */}
+                                <button
+                                    className="remove-search-button"
+                                    onClick={(e) => handleRemoveSearchTerm(e, item)} // 클릭 이벤트 연결
+                                    aria-label={`"${item}" 검색어 삭제`} // 접근성 향상
+                                >
+                                    &times; {/* 'X' 모양 문자 */}
+                                </button>
+                            </li>
+                        ))}
                     </ul>
                 </div>
                 )}

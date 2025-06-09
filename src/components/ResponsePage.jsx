@@ -374,7 +374,7 @@ const ResponsePage = () => {
                             </strong><br />
                             <strong className="restaurant-rating">&nbsp;&nbsp;&nbsp;{restaurant.rating}&nbsp;&nbsp;</strong>
                             <Rating readonly initialValue={restaurant.rating} fillColor="orange" allowFraction={true} size={30}/><br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;{restaurant.address} <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;{restaurant.roadAddressName} <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone}
                             </div>
 

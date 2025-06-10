@@ -79,23 +79,19 @@ const ResponsePage = () => {
         if (map && RestaurantData && RestaurantData.length > 0) {
             // LatLngBounds 객체를 생성합니다
             const bounds = new kakao.maps.LatLngBounds();
-
-            // 모든 음식점의 위치 정보를 bounds에 추가합니다.
+            // 모든 음식점의 위치 정보를 bounds에 추가
             RestaurantData.forEach(restaurant => {
                 bounds.extend(new kakao.maps.LatLng(parseFloat(restaurant.lat), parseFloat(restaurant.lng)));
             });
-
-            // Bounds에 포함된 영역으로 지도의 중심과 확대/축소 레벨을 설정합니다
+            // Bounds에 포함된 영역으로 지도 설정
             map.setBounds(bounds);
 
-            // setCenter와 setLevel은 setBounds가 해주므로 따로 호출하지 않아도 됩니다.
-            // 만약 setBounds 호출 후 특정 로직이 필요하다면 추가할 수 있습니다.
         } else if (map && (!RestaurantData || RestaurantData.length === 0)) {
-            // 데이터가 없을 경우 기본 중심과 배율로 설정 (예: 서울 중앙)
+            // 데이터가 없을 경우 기본 중심과 배율로 설정
             setCenter({ lat: 37.5642135, lng: 127.0016985 });
-            setLevel(7); // 기본 배율
+            setLevel(7);
         }
-    }, [map, RestaurantData]); // map과 RestaurantData가 변경될 때마다 실행
+    }, [map, RestaurantData]);
 
 
 
@@ -117,8 +113,23 @@ const ResponsePage = () => {
     // 목록 항목 클릭 핸들러 함수
     const handleListItemClick = (index) => {
         setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
-        setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
-        setLevel(5);
+        // 클릭된 음식점 데이터 가져오기
+        const clickedRestaurant = restaurantList[index];
+        if (clickedRestaurant) {
+             // 클릭된 목록의 마커 위치로 지도 중심 이동
+            setCenter({
+                lat: parseFloat(clickedRestaurant.lat),
+                lng: parseFloat(clickedRestaurant.lng)
+            });
+            setLevel(5); // 배율을 5로 변경
+            // setCenter와 setLevel 상태를 업데이트하는 것만으로는 지도가 바로 이동하지 않을 수 있습니다.
+            // 지도 인스턴스의 panTo 또는 setCenter 메서드를 직접 호출하는 것이 좋습니다.
+            if (map) {
+                 // 부드러운 이동을 원하면 panTo 사용, 즉시 이동은 setCenter 사용
+                 map.panTo(new kakao.maps.LatLng(parseFloat(clickedRestaurant.lat), parseFloat(clickedRestaurant.lng)));
+                 map.setLevel(5); // 지도 인스턴스의 레벨 직접 변경
+            }
+        }
     };
 
     const handleLogout = () => {

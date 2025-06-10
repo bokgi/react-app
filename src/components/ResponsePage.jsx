@@ -64,6 +64,7 @@ const ResponsePage = () => {
 
     const [center, setCenter] = useState(RestaurantData[0] || { lat: 37.5642135, lng: 127.0016985 }); // 서울 중앙 위도/경도
     const [level, setLevel] = useState(7); // 배율
+    console.log("현재 level: " + level);
     const [markers] = useState(RestaurantData); // 마커
     const [restaurantList] = useState(RestaurantData); // 목록
     const [hoveredMarkerIndex, setHoveredMarkerIndex] = useState(null); // 오버레이
@@ -120,6 +121,7 @@ const ResponsePage = () => {
         setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
         setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
         setLevel(5);
+        console.log(level);
     };
 
     const handleLogout = () => {

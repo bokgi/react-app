@@ -114,7 +114,6 @@ const ResponsePage = () => {
         if (map && restaurantList[index]) {
             const moveLatLon = new kakao.maps.LatLng(restaurantList[index].lat, restaurantList[index].lng);
             map.panTo(moveLatLon);
-            map.setLevel(5);
         }
     };
 
@@ -310,7 +309,7 @@ const ResponsePage = () => {
                 <p></p>
                 
                 <div className="map-container">
-                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} >
+                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} key={`${center.lat}-${center.lng}-${level}`}>
                         {markers.map((position, index) => (
                             <React.Fragment key={index}>
                                 <MapMarker

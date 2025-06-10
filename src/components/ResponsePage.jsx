@@ -118,10 +118,9 @@ const ResponsePage = () => {
     // 목록 항목 클릭 핸들러 함수
     const handleListItemClick = (index) => {
         setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
-        setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
+        setLevel(5);
         setTimeout(() => {
-            setLevel(5);
-            console.log('setTimeout 후 setLevel(5) 호출');
+            setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
         }, 100);
     };
 

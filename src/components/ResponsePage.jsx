@@ -72,35 +72,32 @@ const ResponsePage = () => {
     // 목록 항목 <li> 요소들을 참조하기 위한 ref 배열
     const restaurantRefs = useRef([]);
 
-    const mapRef = useRef(null);
-
+    // 음식점들의 중앙 위치에 처음 지도 출력
     useEffect(() => {
-        const map = mapRef.current;
-        if (map && RestaurantData && RestaurantData.length > 0) {
-            console.log("useEffect: Setting initial bounds"); // 디버깅용 로그
-            const bounds = new kakao.maps.LatLngBounds();
-            RestaurantData.forEach(restaurant => {
-                bounds.extend(new kakao.maps.LatLng(parseFloat(restaurant.lat), parseFloat(restaurant.lng)));
-            });
-            map.setBounds(bounds);
+        if (RestaurantData && RestaurantData.length > 0) {
+            let totalLat = 0;
+            let totalLng = 0;
+            const count = RestaurantData.length;
 
-            // setBounds가 완료된 후, 실제 지도에 적용된 중심과 레벨 값을
-            // 상태에 반영하고 싶다면 아래 코드를 추가할 수 있습니다.
-            // setCenter({
-            //     lat: map.getCenter().getLat(),
-            //     lng: map.getCenter().getLng()
-            // });
-            // setLevel(map.getLevel());
-        } else if (map && (!RestaurantData || RestaurantData.length === 0)) {
-             console.log("useEffect: Setting default center/level"); // 디버깅용 로그
-            // 데이터가 없을 경우 기본 중심과 배율로 설정 (이 경우 map.setBounds를 호출하지 않습니다)
-             map.setCenter(new kakao.maps.LatLng(37.5642135, 127.0016985));
-             map.setLevel(7);
-             // 상태도 업데이트 (선택 사항이지만, 지도 상태와 React 상태를 일치시키는 것이 좋습니다)
-             setCenter({ lat: 37.5642135, lng: 127.0016985 });
-             setLevel(7);
+            RestaurantData.forEach(restaurant => {
+                totalLat += parseFloat(restaurant.lat);
+                totalLng += parseFloat(restaurant.lng);
+            });
+
+            const averageLat = totalLat / count;
+            const averageLng = totalLng / count;
+
+            const newCenter = { lat: averageLat, lng: averageLng };
+
+            setCenter(prevCenter => {
+                if (prevCenter.lat === newCenter.lat && prevCenter.lng === newCenter.lng) {
+                    return prevCenter; // 변경이 없으면 이전 상태 그대로 반환하여 리렌더링 방지
+                }
+                return newCenter;
+            });
         }
-    }, [RestaurantData]); // mapRef.current와 RestaurantData를 의존성으로 설정
+    }, []);
+
 
 
     // 지도 마커 클릭 시 해당 목록 항목으로 스크롤
@@ -118,28 +115,11 @@ const ResponsePage = () => {
         setSelectedRestaurantIndex(index); // 클릭된 마커의 인덱스 저장
     };
 
-        // 목록 항목 클릭 핸들러 함수
+    // 목록 항목 클릭 핸들러 함수
     const handleListItemClick = (index) => {
         setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
-
-        const clickedRestaurant = restaurantList[index];
-        const map = mapRef.current;
-
-        if (clickedRestaurant && map) {
-             console.log(`handleListItemClick: Moving map to index ${index}`); // 디버깅용 로그
-             // 클릭된 목록의 마커 위치로 지도 중심 이동 (부드러운 이동)
-             map.panTo(new kakao.maps.LatLng(parseFloat(clickedRestaurant.lat), parseFloat(clickedRestaurant.lng)));
-             // 배율을 5로 변경
-             map.setLevel(5);
-
-             // React 상태도 업데이트하여 지도 상태와 일치시킵니다.
-             // 이렇게 하면 Map 컴포넌트의 center, level prop이 최신 상태를 유지하게 됩니다.
-             setCenter({
-                 lat: parseFloat(clickedRestaurant.lat),
-                 lng: parseFloat(clickedRestaurant.lng)
-             });
-             setLevel(5);
-        }
+        setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
+        setLevel(5);
     };
 
     const handleLogout = () => {
@@ -334,7 +314,7 @@ const ResponsePage = () => {
             <p></p>
             
             <div className="map-container">
-                <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={(map) => {mapRef.current = map;}}>
+                <Map center={center} style={{width: "100%", height: "100%"}} level={level}>
                 {markers.map((position, index) => (
                     <React.Fragment key={index}>
                         <MapMarker

@@ -98,7 +98,7 @@ const WishListPage = () => {
     }, [user]);
 
 
-    // 찜 추가 
+    // 찜 추가 - ResponcePage와 동일, 사용하지는 않음
     const handleAddWish = async (restaurant) => {
 
         if (!user) {

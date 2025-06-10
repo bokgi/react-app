@@ -38,7 +38,7 @@ const ResponsePage = () => {
     const RestaurantData = RestaurantList.map(item => ({
         name: item.placeName,
         rating: Number(item.rating).toFixed(1),
-        id: item.id,
+        id: item.restaurantId,
         lat: item.y,
         lng: item.x,
         url: item.url,

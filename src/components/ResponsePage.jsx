@@ -72,31 +72,25 @@ const ResponsePage = () => {
     // 목록 항목 <li> 요소들을 참조하기 위한 ref 배열
     const restaurantRefs = useRef([]);
 
+    const [map, setMap] = useState(null); // Map 객체 인스턴스 저장
+
     // 음식점들의 중앙 위치에 처음 지도 출력
     useEffect(() => {
-        if (RestaurantData && RestaurantData.length > 0) {
-            let totalLat = 0;
-            let totalLng = 0;
-            const count = RestaurantData.length;
+        // map 객체가 로딩되었고, 마커 데이터가 존재할 경우
+        if (map && markers.length > 0) {
+            // 마커의 위치들을 포함하는 LatLngBounds 객체를 생성합니다.
+            const bounds = new kakao.maps.LatLngBounds();
 
-            RestaurantData.forEach(restaurant => {
-                totalLat += parseFloat(restaurant.lat);
-                totalLng += parseFloat(restaurant.lng);
+            // 모든 마커의 위치를 LatLngBounds 객체에 추가합니다.
+            markers.forEach(marker => {
+                bounds.extend(new kakao.maps.LatLng(marker.lat, marker.lng));
             });
 
-            const averageLat = totalLat / count;
-            const averageLng = totalLng / count;
+            // LatLngBounds 영역이 지도 화면에 모두 보이도록 지도의 중심과 배율을 자동으로 조정합니다.
+            map.setBounds(bounds);
 
-            const newCenter = { lat: averageLat, lng: averageLng };
-
-            setCenter(prevCenter => {
-                if (prevCenter.lat === newCenter.lat && prevCenter.lng === newCenter.lng) {
-                    return prevCenter; // 변경이 없으면 이전 상태 그대로 반환하여 리렌더링 방지
-                }
-                return newCenter;
-            });
         }
-    }, []);
+    }, [map, markers]);
 
 
 
@@ -117,9 +111,13 @@ const ResponsePage = () => {
 
     // 목록 항목 클릭 핸들러 함수
     const handleListItemClick = (index) => {
-        setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
-        setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
-        setLevel(5);
+        setSelectedRestaurantIndex(index);
+        if (map && restaurantList[index]) {
+            const moveLatLon = new kakao.maps.LatLng(restaurantList[index].lat, restaurantList[index].lng);
+            map.panTo(moveLatLon); // 부드럽게 이동
+
+            setLevel(5);
+        }
     };
 
     const handleLogout = () => {
@@ -314,7 +312,7 @@ const ResponsePage = () => {
                 <p></p>
                 
                 <div className="map-container">
-                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} key={`${center.lat}-${center.lng}-${level}`}>
+                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} key={`${center.lat}-${center.lng}-${level}`}>
                         {markers.map((position, index) => (
                             <React.Fragment key={index}>
                                 <MapMarker

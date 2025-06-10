@@ -118,10 +118,8 @@ const ResponsePage = () => {
     // 목록 항목 클릭 핸들러 함수
     const handleListItemClick = (index) => {
         setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
+        setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
         setLevel(5);
-        setTimeout(() => {
-            setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
-        }, 100);
     };
 
     const handleLogout = () => {
@@ -313,35 +311,35 @@ const ResponsePage = () => {
                         return <React.Fragment key={index}>{part}</React.Fragment>;
                     })}
                 </h2>
-            <p></p>
-            
-            <div className="map-container">
-                <Map center={center} style={{width: "100%", height: "100%"}} level={level}>
-                    {markers.map((position, index) => (
-                        <React.Fragment key={index}>
-                            <MapMarker
-                                position={position}
-                                onMouseOver={() => setHoveredMarkerIndex(index)}
-                                onMouseOut={() => setHoveredMarkerIndex(null)}
-                                onClick={() => handleMarkerClick(index)}
-                            />
-
-                            {/* 마우스가 올라와 있거나 클릭된 마커일 경우에만 CustomOverlayMap 렌더링 */}
-                            {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
-                                <CustomOverlayMap
+                <p></p>
+                
+                <div className="map-container">
+                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} key={`${center.lat}-${center.lng}-${level}`}>
+                        {markers.map((position, index) => (
+                            <React.Fragment key={index}>
+                                <MapMarker
                                     position={position}
-                                    xAnchor={0.5}
-                                    yAnchor={1.5}
-                                >
-                                    <div className="map-overlay-info">
-                                        {position.name || `위치 ${index + 1}`}
-                                    </div>
-                                </CustomOverlayMap>
-                            )}
-                        </React.Fragment>
-                    ))}
-                </Map>
-            </div>
+                                    onMouseOver={() => setHoveredMarkerIndex(index)}
+                                    onMouseOut={() => setHoveredMarkerIndex(null)}
+                                    onClick={() => handleMarkerClick(index)}
+                                />
+
+                                {/* 마우스가 올라와 있거나 클릭된 마커일 경우에만 CustomOverlayMap 렌더링 */}
+                                {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
+                                    <CustomOverlayMap
+                                        position={position}
+                                        xAnchor={0.5}
+                                        yAnchor={1.5}
+                                    >
+                                        <div className="map-overlay-info">
+                                            {position.name || `위치 ${index + 1}`}
+                                        </div>
+                                    </CustomOverlayMap>
+                                )}
+                            </React.Fragment>
+                        ))}
+                    </Map>
+                </div>
             </div>
 
             <div className="list-area">

@@ -76,17 +76,16 @@ const ResponsePage = () => {
 
     // 음식점들의 중앙 위치에 처음 지도 출력
     useEffect(() => {
-        // map 객체가 로딩되었고, 마커 데이터가 존재할 경우
+
         if (map && markers.length > 0) {
-            // 마커의 위치들을 포함하는 LatLngBounds 객체를 생성합니다.
+            // 마커의 위치들을 포함하는 LatLngBounds 객체 생성
             const bounds = new kakao.maps.LatLngBounds();
 
-            // 모든 마커의 위치를 LatLngBounds 객체에 추가합니다.
+            // 모든 마커의 위치를 LatLngBounds 객체 추가
             markers.forEach(marker => {
                 bounds.extend(new kakao.maps.LatLng(marker.lat, marker.lng));
             });
 
-            // LatLngBounds 영역이 지도 화면에 모두 보이도록 지도의 중심과 배율을 자동으로 조정합니다.
             map.setBounds(bounds);
 
         }
@@ -114,9 +113,8 @@ const ResponsePage = () => {
         setSelectedRestaurantIndex(index);
         if (map && restaurantList[index]) {
             const moveLatLon = new kakao.maps.LatLng(restaurantList[index].lat, restaurantList[index].lng);
-            map.panTo(moveLatLon); // 부드럽게 이동
-
-            setLevel(5);
+            map.panTo(moveLatLon);
+            map.setLevel(5);
         }
     };
 
@@ -312,7 +310,7 @@ const ResponsePage = () => {
                 <p></p>
                 
                 <div className="map-container">
-                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} key={`${center.lat}-${center.lng}-${level}`}>
+                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} >
                         {markers.map((position, index) => (
                             <React.Fragment key={index}>
                                 <MapMarker

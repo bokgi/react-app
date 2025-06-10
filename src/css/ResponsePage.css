@@ -264,6 +264,7 @@
     font-weight: 500;
     white-space: nowrap; /* 내용이 길어도 줄바꿈되지 않도록 함 */
     cursor: pointer;
+    z-index: 1000;
 }
 
 .list-area p .response-content {

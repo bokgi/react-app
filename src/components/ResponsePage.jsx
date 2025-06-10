@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from 'react-kakao-maps-sdk';
+import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import "../css/ResponsePage.css";
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { Rating } from 'react-simple-star-rating';
@@ -10,10 +10,6 @@ const ResponsePage = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
-
-    useKakaoLoader({
-        libraries: ["services", "clusterer"],
-    });
 
     const { searchTerm, result } = location.state || {}; // 검색어, 검색 내용 location
     const { user, logout } = useAuth();
@@ -75,31 +71,33 @@ const ResponsePage = () => {
 
     // 목록 항목 <li> 요소들을 참조하기 위한 ref 배열
     const restaurantRefs = useRef([]);
-    // Map 객체에 접근하기 위한 ref
-    const mapRef = useRef();
 
-
-    // 음식점들의 위치에 맞춰 지도 배율 및 중심 자동 설정
+    // 음식점들의 중앙 위치에 처음 지도 출력
     useEffect(() => {
+        if (RestaurantData && RestaurantData.length > 0) {
+            let totalLat = 0;
+            let totalLng = 0;
+            const count = RestaurantData.length;
 
-        if (RestaurantData && RestaurantData.length > 0 && mapRef.current) {
-            // Kakao Maps API의 LatLngBounds 객체 생성
-            let bounds = new kakao.maps.LatLngBounds();
-
-            // RestaurantData의 모든 위치 정보를 LatLngBounds에 추가
             RestaurantData.forEach(restaurant => {
-                bounds.extend(new kakao.maps.LatLng(restaurant.lat, restaurant.lng));
+                totalLat += parseFloat(restaurant.lat);
+                totalLng += parseFloat(restaurant.lng);
             });
 
-            // 계산된 영역에 맞춰 지도의 중심과 배율 설정
-            mapRef.current.setBounds(bounds, [20, 20, 20, 20]);
+            const averageLat = totalLat / count;
+            const averageLng = totalLng / count;
 
-        } else if ((!RestaurantData || RestaurantData.length === 0) && mapRef.current) {
-            // 검색 결과가 없을 경우 기본 위치
-            setCenter({ lat: 37.5642135, lng: 127.0016985 });
-            setLevel(7);
+            const newCenter = { lat: averageLat, lng: averageLng };
+
+            setCenter(prevCenter => {
+                if (prevCenter.lat === newCenter.lat && prevCenter.lng === newCenter.lng) {
+                    return prevCenter; // 변경이 없으면 이전 상태 그대로 반환하여 리렌더링 방지
+                }
+                return newCenter;
+            });
         }
-    }, [RestaurantData]);
+    }, []);
+
 
 
     // 지도 마커 클릭 시 해당 목록 항목으로 스크롤
@@ -120,13 +118,8 @@ const ResponsePage = () => {
     // 목록 항목 클릭 핸들러 함수
     const handleListItemClick = (index) => {
         setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
-
-        if (mapRef.current) {
-            const clickedRestaurant = restaurantList[index];
-            const newLatLng = new kakao.maps.LatLng(clickedRestaurant.lat, clickedRestaurant.lng);
-            mapRef.current.setCenter(newLatLng);
-            mapRef.current.setLevel(6);
-        }
+        setCenter(restaurantList[index]); // 클릭된 목록의 마커 위치로 지도 중심 이동
+        setLevel(5);
     };
 
     const handleLogout = () => {
@@ -321,30 +314,30 @@ const ResponsePage = () => {
             <p></p>
             
             <div className="map-container">
-                <Map center={center} style={{width: "100%", height: "100%"}} level={level} ref={mapRef}>
-                    {markers.map((position, index) => (
-                        <React.Fragment key={index}>
-                            <MapMarker
-                                position={position}
-                                onMouseOver={() => setHoveredMarkerIndex(index)}
-                                onMouseOut={() => setHoveredMarkerIndex(null)}
-                                onClick={() => handleMarkerClick(index)}
-                            />
+                <Map center={center} style={{width: "100%", height: "100%"}} level={level}>
+                {markers.map((position, index) => (
+                    <React.Fragment key={index}>
+                        <MapMarker
+                            position={position}
+                            onMouseOver={() => setHoveredMarkerIndex(index)}
+                            onMouseOut={() => setHoveredMarkerIndex(null)}
+                            onClick={() => handleMarkerClick(index)}
+                        />
 
-                            {/* 마우스가 올라와 있거나 클릭된 마커일 경우에만 CustomOverlayMap 렌더링 */}
-                            {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
-                                <CustomOverlayMap
-                                    position={position}
-                                    xAnchor={0.5}
-                                    yAnchor={1.5}
-                                >
-                                    <div className="map-overlay-info">
-                                        {position.name || `위치 ${index + 1}`}
-                                    </div>
-                                </CustomOverlayMap>
-                            )}
-                        </React.Fragment>
-                    ))}
+                        {/* 마우스가 올라와 있거나 클릭된 마커일 경우에만 CustomOverlayMap 렌더링 */}
+                        {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
+                            <CustomOverlayMap
+                                position={position}
+                                xAnchor={0.5}
+                                yAnchor={1.5}
+                            >
+                                <div className="map-overlay-info">
+                                    {position.name || `위치 ${index + 1}`}
+                                </div>
+                            </CustomOverlayMap>
+                        )}
+                    </React.Fragment>
+                ))}
                 </Map>
             </div>
             </div>

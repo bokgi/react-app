@@ -309,7 +309,7 @@ const ResponsePage = () => {
                 <p></p>
                 
                 <div className="map-container">
-                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} key={`${center.lat}-${center.lng}-${level}`}>
+                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} >
                         {markers.map((position, index) => (
                             <React.Fragment key={index}>
                                 <MapMarker

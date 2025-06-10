@@ -308,58 +308,62 @@ const ResponsePage = () => {
                 </h2>
                 <p></p>
                 
-                <div className="map-container">
-                    <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} key={`${center.lat}-${center.lng}-${level}`}>
-                        {markers.map((position, index) => {
-                            // 현재 마커가 선택된 마커인지 확인
-                            const isSelected = selectedRestaurantIndex === index;
+                 <div className="map-container">
+                        {/* isLoaded 상태에 따라 지도를 렌더링 */}
+                        {isLoaded ? (
+                            <Map
+                                center={center}
+                                style={{width: "100%", height: "100%"}}
+                                level={level}
+                                onCreate={setMap}
+                                key={`${center.lat}-${center.lng}-${level}`}
+                            >
+                                {markers.map((position, index) => {
+                                    const isSelected = selectedRestaurantIndex === index;
 
-                            const markerImageUrl = isSelected
-                                ? '/images/icon/pin_on.png' 
-                                : '/images/icon/pin_off.png';
+                                    // **SDK 로딩 완료 후 kakao.maps 객체 사용**
+                                    const markerImageUrl = isSelected
+                                        ? '/images/icon/marker_selected.png'
+                                        : '/images/icon/marker_basic.png';
+                                    const markerImageSize = new kakao.maps.Size(40, 45);
+                                    const markerImageOptions = {
+                                        offset: new kakao.maps.Point(markerImageSize.width / 2, markerImageSize.height)
+                                    };
+                                    const markerImage = new kakao.maps.MarkerImage(
+                                        markerImageUrl,
+                                        markerImageSize,
+                                        markerImageOptions
+                                    );
 
-                            const markerImageSize = new kakao.maps.Size(40, 45);
-
-                            // 마커 이미지 옵션 설정 (예: 이미지의 기준점 위치)
-                            // 예시: 이미지 하단 중앙을 마커 위치로 설정
-                            const markerImageOptions = {
-                                offset: new kakao.maps.Point(markerImageSize.width / 2, markerImageSize.height)
-                            };
-
-                            // 마커 이미지 객체 생성
-                            const markerImage = new kakao.maps.MarkerImage(
-                                markerImageUrl,
-                                markerImageSize,
-                                markerImageOptions
-                            );
-
-                            return (
-                                <React.Fragment key={index}>
-                                    <MapMarker
-                                        position={position}
-                                        // 생성한 마커 이미지 객체를 image prop에 전달
-                                        image={markerImage}
-                                        onMouseOver={() => setHoveredMarkerIndex(index)}
-                                        onMouseOut={() => setHoveredMarkerIndex(null)}
-                                        onClick={() => handleMarkerClick(index)}
-                                    />
-
-                                    {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
-                                        <CustomOverlayMap
-                                            position={position}
-                                            xAnchor={0.5}
-                                            yAnchor={1.5} // 필요에 따라 오버레이 위치 조정 (마커 이미지 크기에 맞게)
-                                        >
-                                            <div className="map-overlay-info">
-                                                {position.name || `위치 ${index + 1}`}
-                                            </div>
-                                        </CustomOverlayMap>
-                                    )}
-                                </React.Fragment>
-                            );
-                        })}
-                    </Map>
-                </div>
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <MapMarker
+                                                position={position}
+                                                image={markerImage} // image prop 전달
+                                                onMouseOver={() => setHoveredMarkerIndex(index)}
+                                                onMouseOut={() => setHoveredMarkerIndex(null)}
+                                                onClick={() => handleMarkerClick(index)}
+                                            />
+                                            {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
+                                                <CustomOverlayMap
+                                                    position={position}
+                                                    xAnchor={0.5}
+                                                    yAnchor={1.5}
+                                                >
+                                                    <div className="map-overlay-info">
+                                                        {position.name || `위치 ${index + 1}`}
+                                                    </div>
+                                                </CustomOverlayMap>
+                                            )}
+                                        </React.Fragment>
+                                    );
+                                })}
+                            </Map>
+                        ) : (
+                            // SDK 로딩 중일 때 표시할 내용 (로딩 스피너 등)
+                            <div>지도 로딩 중...</div>
+                        )}
+                    </div>
             </div>
 
             <div className="list-area">

@@ -72,27 +72,35 @@ const ResponsePage = () => {
     // 목록 항목 <li> 요소들을 참조하기 위한 ref 배열
     const restaurantRefs = useRef([]);
 
-    const [map, setMap] = useState(null);
+    const mapRef = useRef(null);
 
-    // 음식점 데이터나 지도 인스턴스가 준비되면 Bounds 설정
     useEffect(() => {
+        const map = mapRef.current;
         if (map && RestaurantData && RestaurantData.length > 0) {
-            // LatLngBounds 객체를 생성합니다
+            console.log("useEffect: Setting initial bounds"); // 디버깅용 로그
             const bounds = new kakao.maps.LatLngBounds();
-            // 모든 음식점의 위치 정보를 bounds에 추가
             RestaurantData.forEach(restaurant => {
                 bounds.extend(new kakao.maps.LatLng(parseFloat(restaurant.lat), parseFloat(restaurant.lng)));
             });
-            // Bounds에 포함된 영역으로 지도 설정
             map.setBounds(bounds);
 
+            // setBounds가 완료된 후, 실제 지도에 적용된 중심과 레벨 값을
+            // 상태에 반영하고 싶다면 아래 코드를 추가할 수 있습니다.
+            // setCenter({
+            //     lat: map.getCenter().getLat(),
+            //     lng: map.getCenter().getLng()
+            // });
+            // setLevel(map.getLevel());
         } else if (map && (!RestaurantData || RestaurantData.length === 0)) {
-            // 데이터가 없을 경우 기본 중심과 배율로 설정
-            setCenter({ lat: 37.5642135, lng: 127.0016985 });
-            setLevel(7);
+             console.log("useEffect: Setting default center/level"); // 디버깅용 로그
+            // 데이터가 없을 경우 기본 중심과 배율로 설정 (이 경우 map.setBounds를 호출하지 않습니다)
+             map.setCenter(new kakao.maps.LatLng(37.5642135, 127.0016985));
+             map.setLevel(7);
+             // 상태도 업데이트 (선택 사항이지만, 지도 상태와 React 상태를 일치시키는 것이 좋습니다)
+             setCenter({ lat: 37.5642135, lng: 127.0016985 });
+             setLevel(7);
         }
-    }, [RestaurantData]);
-
+    }, [mapRef.current, RestaurantData]); // mapRef.current와 RestaurantData를 의존성으로 설정
 
 
     // 지도 마커 클릭 시 해당 목록 항목으로 스크롤
@@ -110,25 +118,27 @@ const ResponsePage = () => {
         setSelectedRestaurantIndex(index); // 클릭된 마커의 인덱스 저장
     };
 
-    // 목록 항목 클릭 핸들러 함수
+        // 목록 항목 클릭 핸들러 함수
     const handleListItemClick = (index) => {
         setSelectedRestaurantIndex(index); // 클릭된 목록의 인덱스 저장
-        // 클릭된 음식점 데이터 가져오기
+
         const clickedRestaurant = restaurantList[index];
-        if (clickedRestaurant) {
-             // 클릭된 목록의 마커 위치로 지도 중심 이동
-            setCenter({
-                lat: parseFloat(clickedRestaurant.lat),
-                lng: parseFloat(clickedRestaurant.lng)
-            });
-            setLevel(5); // 배율을 5로 변경
-            // setCenter와 setLevel 상태를 업데이트하는 것만으로는 지도가 바로 이동하지 않을 수 있습니다.
-            // 지도 인스턴스의 panTo 또는 setCenter 메서드를 직접 호출하는 것이 좋습니다.
-            if (map) {
-                 // 부드러운 이동을 원하면 panTo 사용, 즉시 이동은 setCenter 사용
-                 map.panTo(new kakao.maps.LatLng(parseFloat(clickedRestaurant.lat), parseFloat(clickedRestaurant.lng)));
-                 map.setLevel(5); // 지도 인스턴스의 레벨 직접 변경
-            }
+        const map = mapRef.current;
+
+        if (clickedRestaurant && map) {
+             console.log(`handleListItemClick: Moving map to index ${index}`); // 디버깅용 로그
+             // 클릭된 목록의 마커 위치로 지도 중심 이동 (부드러운 이동)
+             map.panTo(new kakao.maps.LatLng(parseFloat(clickedRestaurant.lat), parseFloat(clickedRestaurant.lng)));
+             // 배율을 5로 변경
+             map.setLevel(5);
+
+             // React 상태도 업데이트하여 지도 상태와 일치시킵니다.
+             // 이렇게 하면 Map 컴포넌트의 center, level prop이 최신 상태를 유지하게 됩니다.
+             setCenter({
+                 lat: parseFloat(clickedRestaurant.lat),
+                 lng: parseFloat(clickedRestaurant.lng)
+             });
+             setLevel(5);
         }
     };
 
@@ -324,7 +334,7 @@ const ResponsePage = () => {
             <p></p>
             
             <div className="map-container">
-                <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap}>
+                <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={(map) => {mapRef.current = map;}}>
                 {markers.map((position, index) => (
                     <React.Fragment key={index}>
                         <MapMarker

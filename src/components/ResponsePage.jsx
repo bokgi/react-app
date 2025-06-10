@@ -310,29 +310,54 @@ const ResponsePage = () => {
                 
                 <div className="map-container">
                     <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap} key={`${center.lat}-${center.lng}-${level}`}>
-                        {markers.map((position, index) => (
-                            <React.Fragment key={index}>
-                                <MapMarker
-                                    position={position}
-                                    onMouseOver={() => setHoveredMarkerIndex(index)}
-                                    onMouseOut={() => setHoveredMarkerIndex(null)}
-                                    onClick={() => handleMarkerClick(index)}
-                                />
+                        {markers.map((position, index) => {
+                            // 현재 마커가 선택된 마커인지 확인
+                            const isSelected = selectedRestaurantIndex === index;
 
-                                {/* 마우스가 올라와 있거나 클릭된 마커일 경우에만 CustomOverlayMap 렌더링 */}
-                                {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
-                                    <CustomOverlayMap
+                            const markerImageUrl = isSelected
+                                ? '/images/icon/pin_on.png' 
+                                : '/images/icon/pin_off.png';
+
+                            const markerImageSize = new kakao.maps.Size(40, 45);
+
+                            // 마커 이미지 옵션 설정 (예: 이미지의 기준점 위치)
+                            // 예시: 이미지 하단 중앙을 마커 위치로 설정
+                            const markerImageOptions = {
+                                offset: new kakao.maps.Point(markerImageSize.width / 2, markerImageSize.height)
+                            };
+
+                            // 마커 이미지 객체 생성
+                            const markerImage = new kakao.maps.MarkerImage(
+                                markerImageUrl,
+                                markerImageSize,
+                                markerImageOptions
+                            );
+
+                            return (
+                                <React.Fragment key={index}>
+                                    <MapMarker
                                         position={position}
-                                        xAnchor={0.5}
-                                        yAnchor={1.5}
-                                    >
-                                        <div className="map-overlay-info">
-                                            {position.name || `위치 ${index + 1}`}
-                                        </div>
-                                    </CustomOverlayMap>
-                                )}
-                            </React.Fragment>
-                        ))}
+                                        // 생성한 마커 이미지 객체를 image prop에 전달
+                                        image={markerImage}
+                                        onMouseOver={() => setHoveredMarkerIndex(index)}
+                                        onMouseOut={() => setHoveredMarkerIndex(null)}
+                                        onClick={() => handleMarkerClick(index)}
+                                    />
+
+                                    {(hoveredMarkerIndex === index || selectedRestaurantIndex === index) && (
+                                        <CustomOverlayMap
+                                            position={position}
+                                            xAnchor={0.5}
+                                            yAnchor={1.5} // 필요에 따라 오버레이 위치 조정 (마커 이미지 크기에 맞게)
+                                        >
+                                            <div className="map-overlay-info">
+                                                {position.name || `위치 ${index + 1}`}
+                                            </div>
+                                        </CustomOverlayMap>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
                     </Map>
                 </div>
             </div>

@@ -91,7 +91,7 @@ const ResponsePage = () => {
             setCenter({ lat: 37.5642135, lng: 127.0016985 });
             setLevel(7);
         }
-    }, [map, RestaurantData]);
+    }, [RestaurantData]);
 
 
 

@@ -42,7 +42,7 @@ const ResponsePage = () => {
         lat: item.y,
         lng: item.x,
         url: item.url,
-        address: item.address,
+        address: item.roadAddressName,
         phone: item.phone,
         imgUrl: item.imgUrl,
     }));
@@ -368,13 +368,13 @@ const ResponsePage = () => {
                                 )} 
                             </div>
 
-                            <div className="restaurant-item-content" title={"〔" + restaurant.placeName + "〕" + " / " + restaurant.rating + " / " + restaurant.roadAddressName + " / " + (restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone)}>
+                            <div className="restaurant-item-content" title={"〔" + restaurant.placeName + "〕" + " / " + restaurant.rating + " / " + restaurant.address + " / " + (restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone)}>
                             <strong className="restaurant_name">
                                 〔&nbsp;{restaurant.name || `위치 ${index + 1}`}&nbsp;〕
                             </strong><br />
                             <strong className="restaurant-rating">&nbsp;&nbsp;&nbsp;{restaurant.rating}&nbsp;&nbsp;</strong>
                             <Rating readonly initialValue={restaurant.rating} fillColor="orange" allowFraction={true} size={30}/><br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;{restaurant.roadAddressName} <br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;{restaurant.address} <br />
                             &nbsp;&nbsp;&nbsp;&nbsp;{restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone}
                             </div>
 

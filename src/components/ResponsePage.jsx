@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
+import { Map, MapMarker, CustomOverlayMap, useKakaoLoader } from 'react-kakao-maps-sdk';
 import "../css/ResponsePage.css";
 import { useAuth } from '../contexts/AuthContext.jsx';
 import { Rating } from 'react-simple-star-rating';
@@ -10,6 +10,10 @@ const ResponsePage = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
+
+    useKakaoLoader({
+        libraries: ["services", "clusterer"],
+    });
 
     const { searchTerm, result } = location.state || {}; // 검색어, 검색 내용 location
     const { user, logout } = useAuth();

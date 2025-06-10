@@ -72,31 +72,30 @@ const ResponsePage = () => {
     // 목록 항목 <li> 요소들을 참조하기 위한 ref 배열
     const restaurantRefs = useRef([]);
 
-    // 음식점들의 중앙 위치에 처음 지도 출력
+    const [map, setMap] = useState(null);
+
+    // 음식점 데이터나 지도 인스턴스가 준비되면 Bounds 설정
     useEffect(() => {
-        if (RestaurantData && RestaurantData.length > 0) {
-            let totalLat = 0;
-            let totalLng = 0;
-            const count = RestaurantData.length;
+        if (map && RestaurantData && RestaurantData.length > 0) {
+            // LatLngBounds 객체를 생성합니다
+            const bounds = new kakao.maps.LatLngBounds();
 
+            // 모든 음식점의 위치 정보를 bounds에 추가합니다.
             RestaurantData.forEach(restaurant => {
-                totalLat += parseFloat(restaurant.lat);
-                totalLng += parseFloat(restaurant.lng);
+                bounds.extend(new kakao.maps.LatLng(parseFloat(restaurant.lat), parseFloat(restaurant.lng)));
             });
 
-            const averageLat = totalLat / count;
-            const averageLng = totalLng / count;
+            // Bounds에 포함된 영역으로 지도의 중심과 확대/축소 레벨을 설정합니다
+            map.setBounds(bounds);
 
-            const newCenter = { lat: averageLat, lng: averageLng };
-
-            setCenter(prevCenter => {
-                if (prevCenter.lat === newCenter.lat && prevCenter.lng === newCenter.lng) {
-                    return prevCenter; // 변경이 없으면 이전 상태 그대로 반환하여 리렌더링 방지
-                }
-                return newCenter;
-            });
+            // setCenter와 setLevel은 setBounds가 해주므로 따로 호출하지 않아도 됩니다.
+            // 만약 setBounds 호출 후 특정 로직이 필요하다면 추가할 수 있습니다.
+        } else if (map && (!RestaurantData || RestaurantData.length === 0)) {
+            // 데이터가 없을 경우 기본 중심과 배율로 설정 (예: 서울 중앙)
+            setCenter({ lat: 37.5642135, lng: 127.0016985 });
+            setLevel(7); // 기본 배율
         }
-    }, []);
+    }, [map, RestaurantData]); // map과 RestaurantData가 변경될 때마다 실행
 
 
 
@@ -314,7 +313,7 @@ const ResponsePage = () => {
             <p></p>
             
             <div className="map-container">
-                <Map center={center} style={{width: "100%", height: "100%"}} level={level}>
+                <Map center={center} style={{width: "100%", height: "100%"}} level={level} onCreate={setMap}>
                 {markers.map((position, index) => (
                     <React.Fragment key={index}>
                         <MapMarker

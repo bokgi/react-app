@@ -41,7 +41,7 @@ const ResponsePage = () => {
         id: item.restaurantId,
         lat: item.y,
         lng: item.x,
-        url: item.url,
+        url: item.placeUrl,
         address: item.roadAddressName,
         phone: item.phone,
         imgUrl: item.imgUrl,

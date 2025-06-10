@@ -100,7 +100,7 @@ const ResponsePage = () => {
              setCenter({ lat: 37.5642135, lng: 127.0016985 });
              setLevel(7);
         }
-    }, [mapRef.current, RestaurantData]); // mapRef.current와 RestaurantData를 의존성으로 설정
+    }, [RestaurantData]); // mapRef.current와 RestaurantData를 의존성으로 설정
 
 
     // 지도 마커 클릭 시 해당 목록 항목으로 스크롤

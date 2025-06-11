@@ -48,8 +48,8 @@ const LoginPage = () => {
                 displayMessage(errorData.message || `로그인 실패: Status ${response.status}`, 'error');
             }
         } catch (error) {
-            if (response.status === 403) {
-                console.error("오류: 접근 권한이 없습니다 (403 Forbidden)");
+            if (response.status === 502) {
+                console.error("오류: gateway");
                 // 403 오류에 대한 특정 처리 로직
             } else {
                 console.error(`오류: HTTP 상태 코드 ${response.status} 발생`);

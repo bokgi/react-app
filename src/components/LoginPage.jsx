@@ -52,8 +52,9 @@ const LoginPage = () => {
                 // 특정 Status Code에 따른 메시지 또는 로직 분기
                 if (statusCode === 401) {
                     errorMessage = '인증에 실패했습니다. 아이디와 비밀번호를 확인해주세요.';
-                } else if (statusCode === 403) {
+                } else if (statusCode === 500) {
                     errorMessage = '접근 권한이 없습니다.';
+                    console.error("500 오류 발생:", response);
                 } else if (statusCode === 502) {
                     errorMessage = '로그인 서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.';
                     console.error("502 Bad Gateway 오류 발생:", response); // 502 오류 발생 시 콘솔에 기록

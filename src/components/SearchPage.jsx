@@ -90,30 +90,43 @@ function SearchPage() {
             return;
         }
         console.log(`${item.title} 클릭됨`, item);
-
-        setIsLoading(true); // API 호출 전 로딩 상태를 true로 설정
+        setIsLoading(true); // API 호출 전 로딩 상태 true
 
         try {
             const result = await ApiClient.search(item.search, user.token);
             console.log("검색결과: ", result);
 
-            if (result && result.status === 500) {
-                alert("서버 오류");
-                setIsLoading(false); // 로딩 상태 해제
-                return; 
+            // 오류
+            if (result.status) {
+                const serverError = [500, 501, 502, 503];
+                const tokenError = [401, 403];
+
+                if (serverError.includes(result.status)) {
+                    alert("서버와 연결할 수 없습니다. 나중에 다시 시도하십시오.");
+                    setIsLoading(false);
+                    return;
+                } else if (tokenError.includes(result.status)) {
+                    alert("로그인이 만료되었습니다. 다시 로그인 해 주세요.");
+                    setIsLoading(false);
+                    logout();
+                    navigate("/login");
+                    return;
+                };
             }
 
             navigate('/response', { state: { searchTerm: item.title, user: user, result: result } });
             setSearchTerm("");
+
         } catch (error) {
-            console.error("검색 중 오류 발생:", error);
-            alert("검색 중 오류가 발생했습니다.\n다시 검색하시거나, 다시 로그인 해 주세요.");
-            logout();
-            navigate("/login");
+            console.error("검색 중 예상치 못한 오류 발생: ", error);
+            alert("검색 중 예상치 못한 오류가 발생했습니다.");
+            setIsLoading(false);
+            return;
         } finally {
-            setIsLoading(false); // API 호출 완료 후 (성공 또는 실패) 로딩 상태를 false로 설정
+            setIsLoading(false); // API 호출 완료 후 로딩 상태 false
         }
     };
+
 
     // 검색 
     const handleSearchSubmit = async (event) => {
@@ -128,20 +141,30 @@ function SearchPage() {
         }
 
         console.log("검색어:", searchTerm);
-        setIsLoading(true); // API 호출 전 로딩 상태를 true로 설정
+        setIsLoading(true); // API 호출 전 로딩 상태 true
         const query = searchTerm.trim();
 
         try {
             const result = await ApiClient.search(searchTerm, user.token);
             console.log("검색결과: ", result);
 
-            if (result && result.code === -1) {
-                alert("로그인이 만료되었습니다. 다시 로그인 해 주시기 바랍니다.");
-                setIsLoading(false); // 로딩 상태 해제
-                logout();
-                return; 
-            }
+            // 오류
+            if (result.status) {
+                const serverError = [500, 501, 502, 503];
+                const tokenError = [401, 403];
 
+                if (serverError.includes(result.status)) {
+                    alert("서버와 연결할 수 없습니다. 나중에 다시 시도하십시오.");
+                    setIsLoading(false);
+                    return;
+                } else if (tokenError.includes(result.status)) {
+                    alert("로그인이 만료되었습니다. 다시 로그인 해 주세요.");
+                    setIsLoading(false);
+                    logout();
+                    navigate("/login");
+                    return;
+                };
+            }
 
             // 로그인 상태일 때만 최근 검색 기록 저장
             if (user && user.name) { // user.userId는 실제 사용자 정보 객체의 고유 ID 필드명으로 수정
@@ -160,9 +183,12 @@ function SearchPage() {
             
             navigate('/response', { state: { searchTerm: searchTerm, user: user, result: result } });
             setSearchTerm("");
+            
         } catch (error) {
-            console.error("검색 중 오류 발생:", error);
-            alert("검색 중 오류가 발생했습니다.\n다시 검색하시거나, 다시 로그인 해 주세요.");
+            console.error("검색 중 예상치 못한 오류 발생: ", error);
+            alert("검색 중 예상치 못한 오류가 발생했습니다.");
+            setIsLoading(false);
+            return;
         } finally {
             setIsLoading(false); // API 호출 완료 후 로딩 상태를 false로 설정
         }

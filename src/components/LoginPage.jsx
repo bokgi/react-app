@@ -32,24 +32,31 @@ const LoginPage = () => {
         setLoginMessage('');
         setMessageType('');
         try {
-        const response = await ApiClient.login(userCredentials);
-        
-        if (response.ok) {
-            const data = await response.json();
-            if (data.code === 0) {
-                login(data); // AuthContext 내 login 함수를 호출하여 전역 상태 업데이트
-                displayMessage(`환영합니다, ${data.name}님!`, 'success');
-                navigate('/', { replace: true });
+            const response = await ApiClient.login(userCredentials);
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.code === 0) {
+                    login(data); // AuthContext 내 login 함수를 호출하여 전역 상태 업데이트
+                    displayMessage(`환영합니다, ${data.name}님!`, 'success');
+                    navigate('/', { replace: true });
+                } else {
+                    displayMessage('아이디 또는 비밀번호가 잘못되었습니다.', 'error');
+                }
             } else {
-                displayMessage('아이디 또는 비밀번호가 잘못되었습니다.', 'error');
+                const errorData = await response.json();
+                displayMessage(errorData.message || `로그인 실패: Status ${response.status}`, 'error');
             }
-        } else {
-            const errorData = await response.json();
-            displayMessage(errorData.message || `로그인 실패: Status ${response.status}`, 'error');
-        }
         } catch (error) {
-        console.error('로그인 중 오류 발생:', error);
-        displayMessage('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
+            if (response.status === 403) {
+                console.error("오류: 접근 권한이 없습니다 (403 Forbidden)");
+                // 403 오류에 대한 특정 처리 로직
+            } else {
+                console.error(`오류: HTTP 상태 코드 ${response.status} 발생`);
+                // 그 외 다른 HTTP 오류 처리
+            }
+            console.error('로그인 중 오류 발생:', error);
+            displayMessage('로그인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.', 'error');
         }
     };
 

@@ -76,8 +76,8 @@ const WishListPage = () => {
 
             } catch (error) {
                 setUserWishList([]);
-                if (error.statusCode === 403) {
-                    alert('403 오류');
+                if (error.statusCode === 500) {
+                    alert('500 오류');
                 } else {
                     alert('로그인이 만료되었습니다. 다시 로그인 해 주세요.');
                     logout();

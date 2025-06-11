@@ -48,7 +48,7 @@ const LoginPage = () => {
                 displayMessage(errorData.message || `로그인 실패: Status ${response.status}`, 'error');
             }
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
             if (error.status === 502) {
                 console.error("오류: gateway");
                 // 403 오류에 대한 특정 처리 로직

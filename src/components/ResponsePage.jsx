@@ -251,7 +251,6 @@ const ResponsePage = () => {
 
             alert(`${restaurant.name}을(를) 찜 목록에서 제거했습니다.`);
 
-
         } catch (error) {
             console.error('찜 해제 처리 중 오류 발생:', error);
             alert('찜 해제에 실패했습니다.');
@@ -363,7 +362,7 @@ const ResponsePage = () => {
                                 )} 
                             </div>
 
-                            <div className="restaurant-item-content" title={"〔" + restaurant.placeName + "〕" + " / " + restaurant.rating + " / " + restaurant.address + " / " + (restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone)}>
+                            <div className="restaurant-item-content" title={"〔" + restaurant.name + "〕" + " / " + restaurant.rating + " / " + restaurant.address + " / " + (restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone)}>
                             <strong className="restaurant_name">
                                 〔&nbsp;{restaurant.name || `위치 ${index + 1}`}&nbsp;〕
                             </strong><br />

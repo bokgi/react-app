@@ -85,7 +85,6 @@ class ApiClient {
     static async addWish(restaurantId, token){ // 찜 목록 추가
 
         const addEndpoint = ApiClient.SERVER_URL + "/api/wish" + "/add" + "?id=" + restaurantId;
-        console.log(restaurantId);
 
         try {
             const response = await fetch(addEndpoint, {

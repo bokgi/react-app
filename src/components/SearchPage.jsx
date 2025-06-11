@@ -97,10 +97,9 @@ function SearchPage() {
             const result = await ApiClient.search(item.search, user.token);
             console.log("검색결과: ", result);
 
-            if (result && result.code === -1) {
-                alert("로그인이 만료되었습니다. 다시 로그인 해 주시기 바랍니다.");
+            if (result && result.status === 500) {
+                alert("서버 오류");
                 setIsLoading(false); // 로딩 상태 해제
-                logout();
                 return; 
             }
 

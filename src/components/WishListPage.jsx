@@ -209,6 +209,7 @@ const WishListPage = () => {
             console.error('Failed to copy text: ', err);
         }
     };
+    
 
 
   return (

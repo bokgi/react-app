@@ -31,6 +31,7 @@ const KakaoCallbackPage = () => {
 
         try {
         const data = await ApiClient.KakaoLogin(code);
+        console.log(data);
 
             if (data.status >= 400 && data.status <= 499) {
                 console.error(data.status + " 오류 발생: ", data);

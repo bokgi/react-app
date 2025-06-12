@@ -26,37 +26,35 @@ const KakaoCallbackPage = () => {
     }, [location, navigate]);
 
 
-    // 코드 전송 함수 (서버로 전송, 회원가입 및 로그인)
+    // 코드 전송 함수
     const sendCodeToBackend = async (code) => {
-
         try {
             const data = await ApiClient.KakaoLogin(code);
 
-            if (data.success) {
-                
-                if (data && data.success) { 
-                    login(data);
-                    navigate('/', { replace: true });
-                } else {
-                    console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
-                    navigate('/login', { replace: true });
-                }
+            if (data) {
+                const response = await data.json();
 
-            } else {
-
-                if (data.status >= 400 && data.status <= 499) {
-                    console.error(data.status + " 오류 발생: ", data);
-                    alert('로그인 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                if (response.status >= 400 && response.status <= 499) {
+                    console.error(response.status + " 오류 발생: ", response);
+                    alert('로그인 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.');
                     navigate('/login', { replace: true });
-                } else if (data.status >= 500 && data.status <= 599) {
-                    console.error(data.status + " 오류 발생: ", data);
-                    alert('서버가 로그인을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                } else if (response.status >= 500 && response.status <= 599) {
+                    console.error(response.status + " 오류 발생: ", response);
+                    alert('서버가 로그인을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.');
                     navigate('/login', { replace: true });
                 }
             }
+
+            if (data && data.success) { 
+                login(data);
+                navigate('/', { replace: true });
+            } else {
+                console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
+                navigate('/login', { replace: true });
+            }
+
         } catch (error) {
             console.error('로그인 중 네트워크 또는 기타 오류 발생:', error);
-            alert('로그인 중 예기치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.', 'error');
             navigate('/login', { replace: true });
         }
     };

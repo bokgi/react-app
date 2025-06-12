@@ -231,7 +231,7 @@ class ApiClient {
         const KakaoEndpoint = ApiClient.SERVER_URL + "/api/sign-api/kakao-sign-in?code=" + code
 
         try {
-             const response = await fetch(KakaoEndpoint, {
+            const response = await fetch(KakaoEndpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -240,7 +240,7 @@ class ApiClient {
                 }),
             });
 
-            return result; // user login 정보 (AuthContext)
+            return response; // user login 정보 (AuthContext)
 
         } catch (error) {
             console.error('카카오 로그인 중 오류 발생:', error);

@@ -29,10 +29,21 @@ const KakaoCallbackPage = () => {
     // 코드 전송 함수
     const sendCodeToBackend = async (code) => {
         try {
-            const data = await ApiClient.KakaoLogin(code);
+            const response = await ApiClient.KakaoLogin(code);
+            
+            if (response.ok) {
 
-            if (data) {
-                const response = await data.json();
+                const data = await response.json();
+
+                if (data.success) { 
+                    login(data);
+                    navigate('/', { replace: true });
+                } else {
+                    console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
+                    navigate('/login', { replace: true });
+                }
+
+            } else {
 
                 if (response.status >= 400 && response.status <= 499) {
                     console.error(response.status + " 오류 발생: ", response);
@@ -43,14 +54,6 @@ const KakaoCallbackPage = () => {
                     alert('서버가 로그인을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.');
                     navigate('/login', { replace: true });
                 }
-            }
-
-            if (data && data.success) { 
-                login(data);
-                navigate('/', { replace: true });
-            } else {
-                console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
-                navigate('/login', { replace: true });
             }
 
         } catch (error) {

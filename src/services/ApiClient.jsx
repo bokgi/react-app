@@ -240,7 +240,6 @@ class ApiClient {
                 }),
             });
 
-            const result = await response.json(); 
             return result; // user login 정보 (AuthContext)
 
         } catch (error) {

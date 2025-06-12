@@ -24,6 +24,7 @@ const LoginPage = () => {
     };
 
 
+    // 로그인
     const handleLogin = async (e) => {
         e.preventDefault();
         const userCredentials = { id, password };
@@ -33,51 +34,36 @@ const LoginPage = () => {
         try {
             const response = await ApiClient.login(userCredentials);
             console.log(response);
-            
+            console.log(response.status);
 
             if (response.ok) {
                 const data = await response.json();
+
                 if (data.code === 0) {
                     login(data);
                     displayMessage(`환영합니다, ${data.name}님!`, 'success');
                     navigate('/', { replace: true });
                 } else {
-                    // 서버에서 정의한 애플리케이션 레벨 오류 (code가 0이 아닐 때)
                     displayMessage('아이디 또는 비밀번호가 잘못되었습니다.', 'error');
                 }
-            } else {
-                // HTTP 상태 코드가 200번대가 아닐 때 (예: 401, 403, 502 등)
-                const statusCode = response.status; // 여기서 Status Code를 가져옵니다.
-                let errorMessage = `로그인 실패: Status ${statusCode}`;
 
-                // 특정 Status Code에 따른 메시지 또는 로직 분기
-                if (statusCode === 401) {
-                    errorMessage = '인증에 실패했습니다. 아이디와 비밀번호를 확인해주세요.';
-                } else if (statusCode === 500) {
-                    errorMessage = '접근 권한이 없습니다.';
-                    console.error("500 오류 발생:", response);
-                } else if (statusCode === 502) {
-                    errorMessage = '로그인 서버에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.';
-                    console.error("502 Bad Gateway 오류 발생:", response); // 502 오류 발생 시 콘솔에 기록
-                    // 502 오류에 대한 추가적인 특정 처리 로직을 여기에 넣을 수 있습니다.
-                } else {
-                    // 그 외 다른 HTTP 오류
-                    try {
-                         const errorData = await response.json();
-                         errorMessage = errorData.message || errorMessage;
-                    } catch (jsonError) {
-                         // 응답 본문이 JSON이 아닐 경우
-                         console.error("오류 응답 본문 파싱 실패:", jsonError);
-                    }
+            } else {
+
+                let errorMessage = "오류 발생";
+
+                if (response.status >= 400 && response.status <= 499) {
+                    errorMessage = '로그인 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.';
+                    console.error("400 오류 발생: ", response);
+                } else if (response.status >= 500 && response.status <= 599) {
+                    errorMessage = '서버가 로그인을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.';
+                    console.error("500 오류 발생: ", response);
                 }
 
                 displayMessage(errorMessage, 'error');
             }
         } catch (error) {
-            // 네트워크 연결 문제, 요청 자체의 실패 등 응답을 받지 못한 경우
             console.error('로그인 중 네트워크 또는 기타 오류 발생:', error);
-            displayMessage('로그인 중 오류가 발생했습니다. 인터넷 연결 상태를 확인해주세요.', 'error');
-            // 이 catch 블록에서는 일반적으로 HTTP Status Code를 직접 얻기 어렵습니다.
+            displayMessage('로그인 중 예기치 못한 오류가 발생했습니다. 네트워크 연결 상태를 확인해주세요.', 'error');
         }
     };
 
@@ -90,11 +76,12 @@ const LoginPage = () => {
         navigate('/');
     };
 
+
     const KAKAO_REST_API_KEY = '55d2a867b5b86ca3c3b738518c2e03c5';
     const KAKAO_REDIRECT_URI = 'http://14.63.178.159/kakao';
-
     // 카카오 인증 서버로 요청할 URL
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+
 
     // 카카오 로그인 버튼 클릭 핸들러 함수
     const handleKakaoLogin = () => {

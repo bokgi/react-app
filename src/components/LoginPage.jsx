@@ -27,15 +27,13 @@ const LoginPage = () => {
     // 로그인
     const handleLogin = async (e) => {
         e.preventDefault();
-        const userCredentials = { id, password };
         setLoginMessage('');
         setMessageType('');
+        const user = { id, password };
 
         try {
-            const response = await ApiClient.login(userCredentials);
-            console.log(response);
-            console.log(response.status);
-
+            const response = await ApiClient.login(user);
+            
             if (response.ok) {
                 const data = await response.json();
 
@@ -48,7 +46,6 @@ const LoginPage = () => {
                 }
 
             } else {
-
                 let errorMessage = "오류 발생";
 
                 if (response.status >= 400 && response.status <= 499) {

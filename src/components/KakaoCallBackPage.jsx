@@ -47,11 +47,11 @@ const KakaoCallbackPage = () => {
 
                 if (response.status >= 400 && response.status <= 499) {
                     console.error(response.status + " 오류 발생: ", response);
-                    alert('로그인 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.');
+                    alert('로그인 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
                     navigate('/login', { replace: true });
                 } else if (response.status >= 500 && response.status <= 599) {
                     console.error(response.status + " 오류 발생: ", response);
-                    alert('서버가 로그인을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.');
+                    alert('서버가 로그인을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
                     navigate('/login', { replace: true });
                 }
             }

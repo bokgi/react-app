@@ -80,23 +80,30 @@ const SignupPage = () => {
         try {
             const response = await ApiClient.signUp(user);
 
-            if (response.code == -2) {
-                displayMessage('이미 사용중인 아이디입니다.', 'error');
+            if (response.ok) {
+
+                const result = await response.json();
+
+                if (result.code == -2) {
+                    displayMessage('이미 사용중인 아이디입니다.', 'error');
+                } else {
+                    displayMessage('회원가입 성공! 로그인 페이지로 이동합니다.', 'success');
+                } 
+
             } else {
-                displayMessage('회원가입 성공! 로그인 페이지로 이동합니다.', 'success');
-            } 
 
-            let errorMessage = "오류 발생";
+                let errorMessage = "예상치 못한 오류 발생";
 
-            if (response.status >= 400 && response.status <= 499) {
-                errorMessage = '회원가입 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.';
-                console.error(response.status + " 오류 발생: ", response);
-            } else if (response.status >= 500 && response.status <= 599) {
-                errorMessage = '서버가 회원가입을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.';
-                console.error(response.status + " 오류 발생: ", response);
+                if (response.status >= 400 && response.status <= 499) {
+                    errorMessage = '회원가입 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.';
+                    console.error(response.status + " 오류 발생: ", response);
+                } else if (response.status >= 500 && response.status <= 599) {
+                    errorMessage = '서버가 회원가입을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.';
+                    console.error(response.status + " 오류 발생: ", response);
+                } else {
+                    displayMessage(errorMessage, 'error');
+                }
             }
-
-            displayMessage(errorMessage, 'error');
             
         } catch (error) {
             console.error('회원가입 중 네트워크 또는 기타 오류 발생:', error);

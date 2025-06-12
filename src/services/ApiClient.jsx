@@ -21,8 +21,7 @@ class ApiClient {
                 }),
             });
 
-            const result = await response.json();
-            return result;
+            return response;
 
         } catch (error) {
             console.error('로그인 요청 중 오류 발생:', error);

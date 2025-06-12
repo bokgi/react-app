@@ -54,11 +54,11 @@ const LoginPage = () => {
                 } else if (response.status >= 500 && response.status <= 599) {
                     errorMessage = '서버가 로그인을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.';
                     console.error(response.status + " 오류 발생: ", response);
-                } else {
-                    displayMessage(errorMessage, 'error');
                 }
+
+                displayMessage(errorMessage, 'error');
+                
             }
-            
         } catch (error) {
             console.error('로그인 중 네트워크 또는 기타 오류 발생:', error);
             displayMessage('로그인 중 예기치 못한 오류가 발생했습니다. 네트워크 연결 상태를 확인해주세요.', 'error');

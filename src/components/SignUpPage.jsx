@@ -100,9 +100,10 @@ const SignupPage = () => {
                 } else if (response.status >= 500 && response.status <= 599) {
                     errorMessage = '서버가 회원가입을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.';
                     console.error(response.status + " 오류 발생: ", response);
-                } else {
-                    displayMessage(errorMessage, 'error');
                 }
+
+                displayMessage(errorMessage, 'error');
+                
             }
             
         } catch (error) {

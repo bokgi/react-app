@@ -92,10 +92,10 @@ const SignupPage = () => {
 
                 if (response.status >= 400 && response.status <= 499) {
                     errorMessage = '회원가입 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.';
-                    console.error("400 오류 발생: ", response);
+                    console.error(response.status + " 오류 발생: ", response);
                 } else if (response.status >= 500 && response.status <= 599) {
                     errorMessage = '서버가 회원가입을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.';
-                    console.error("500 오류 발생: ", response);
+                    console.error(response.status + " 오류 발생: ", response);
                 }
 
                 displayMessage(errorMessage, 'error');

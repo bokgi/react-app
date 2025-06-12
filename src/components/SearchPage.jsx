@@ -108,12 +108,12 @@ function SearchPage() {
             if (result.status) {
 
                 if (result.status >= 400 && result.status <= 499) {
-                    alert('회원가입 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
-                    console.error("400 오류 발생: ", result);
+                    alert('검색 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
                     return;
                 } else if (result.status >= 500 && result.status <= 599) {
-                    alert('서버가 회원가입을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
-                    console.error("500 오류 발생: ", result);
+                    alert('서버가 검색을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
                     return;
                 }
             }
@@ -163,12 +163,12 @@ function SearchPage() {
             if (result.status) {
 
                 if (result.status >= 400 && result.status <= 499) {
-                    alert('회원가입 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.');
-                    console.error("400 오류 발생: ", result);
+                    alert('검색 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
                     return;
                 } else if (result.status >= 500 && result.status <= 599) {
-                    alert('서버가 회원가입을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.');
-                    console.error("500 오류 발생: ", result);
+                    alert('서버가 검색을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
                     return;
                 }
             }

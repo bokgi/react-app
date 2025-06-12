@@ -102,11 +102,9 @@ function SearchPage() {
 
         try {
             const result = await ApiClient.search(searchTerm, user.token);
-            console.log("검색결과: ", result);
 
             // 오류 확인
-            if (result.status) {
-
+            if (!result.ok) {
                 if (result.status >= 400 && result.status <= 499) {
                     alert('검색 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
                     console.error(result.status + " 오류 발생: ", result);
@@ -115,8 +113,15 @@ function SearchPage() {
                     alert('서버가 검색을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
                     console.error(result.status + " 오류 발생: ", result);
                     return;
+                } else {
+                    alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
                 }
             }
+
+            const response = await result.json();
+            console.log("검색 결과: ", response);
 
             // 로그인 상태 확인 및 최근 검색 기록 저장
             if (user && user.name) {
@@ -133,7 +138,7 @@ function SearchPage() {
                 localStorage.setItem(userSearchHistoryKey, JSON.stringify(limitedHistory)); 
             }
             
-            navigate('/response', { state: { searchTerm: searchTerm, user: user, result: result } });
+            navigate('/response', { state: { searchTerm: searchTerm, user: user, result: response } });
             setSearchTerm("");
             
         } catch (error) {
@@ -157,11 +162,9 @@ function SearchPage() {
 
         try {
             const result = await ApiClient.search(item.search, user.token);
-            console.log("검색결과: ", result);
 
-            // 오류 확인
-            if (result.status) {
-
+           // 오류 확인
+            if (!result.ok) {
                 if (result.status >= 400 && result.status <= 499) {
                     alert('검색 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
                     console.error(result.status + " 오류 발생: ", result);
@@ -170,10 +173,17 @@ function SearchPage() {
                     alert('서버가 검색을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
                     console.error(result.status + " 오류 발생: ", result);
                     return;
+                } else {
+                    alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
                 }
             }
 
-            navigate('/response', { state: { searchTerm: item.title, user: user, result: result } });
+            const response = await result.json();
+            console.log("검색 결과: ", response);
+
+            navigate('/response', { state: { searchTerm: item.title, user: user, result: response } });
             setSearchTerm("");
 
         } catch (error) {

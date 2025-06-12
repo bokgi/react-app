@@ -71,8 +71,7 @@ class ApiClient {
                 }),
             });
 
-            const result = await response.json();
-            return result;
+            return response;
 
         } catch (error) {
             console.error('추천 식당을 불러오는 중 오류 발생:', error);

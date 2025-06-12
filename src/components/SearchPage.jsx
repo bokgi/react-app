@@ -49,7 +49,6 @@ function SearchPage() {
     ];
 
 
-
     const itemGalleryRef = useRef(null);
     const scrollToGallery = () => {
         if (itemGalleryRef.current) {
@@ -71,6 +70,7 @@ function SearchPage() {
         }
     };
 
+
     // 로그인 상태 확인
     const handleInputChange = (event) => {
         if (!user) {
@@ -82,50 +82,6 @@ function SearchPage() {
 
 
     const [isLoading, setIsLoading] = useState(false);
-
-    // 갤러리 아이템 클릭 -> 검색
-    const handleItemClick = async (item) => {
-        if (!user) {
-            alert("로그인 후 이용하실 수 있습니다.");
-            return;
-        }
-        console.log(`${item.title} 클릭됨`, item);
-        setIsLoading(true); // API 호출 전 로딩 상태 true
-
-        try {
-            const result = await ApiClient.search(item.search, user.token);
-            console.log("검색결과: ", result);
-
-            // 오류
-            if (result.status) {
-                const serverError = [500, 501, 502, 503];
-                const tokenError = [401, 403];
-
-                if (serverError.includes(result.status)) {
-                    alert("서버와 연결할 수 없습니다. 나중에 다시 시도하십시오.");
-                    setIsLoading(false);
-                    return;
-                } else if (tokenError.includes(result.status)) {
-                    alert("로그인이 만료되었습니다. 다시 로그인 해 주세요.");
-                    setIsLoading(false);
-                    logout();
-                    navigate("/login");
-                    return;
-                };
-            }
-
-            navigate('/response', { state: { searchTerm: item.title, user: user, result: result } });
-            setSearchTerm("");
-
-        } catch (error) {
-            console.error("검색 중 예상치 못한 오류 발생: ", error);
-            alert("검색 중 예상치 못한 오류가 발생했습니다.");
-            setIsLoading(false);
-            return;
-        } finally {
-            setIsLoading(false); // API 호출 완료 후 로딩 상태 false
-        }
-    };
 
 
     // 검색 
@@ -148,57 +104,92 @@ function SearchPage() {
             const result = await ApiClient.search(searchTerm, user.token);
             console.log("검색결과: ", result);
 
-            // 오류
+            // 오류 확인
             if (result.status) {
-                const serverError = [500, 501, 502, 503];
-                const tokenError = [401, 403];
 
-                if (serverError.includes(result.status)) {
-                    alert("서버와 연결할 수 없습니다. 나중에 다시 시도하십시오.");
-                    setIsLoading(false);
+                if (result.status >= 400 && result.status <= 499) {
+                    alert('회원가입 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error("400 오류 발생: ", result);
                     return;
-                } else if (tokenError.includes(result.status)) {
-                    alert("로그인이 만료되었습니다. 다시 로그인 해 주세요.");
-                    setIsLoading(false);
-                    logout();
-                    navigate("/login");
+                } else if (result.status >= 500 && result.status <= 599) {
+                    alert('서버가 회원가입을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error("500 오류 발생: ", result);
                     return;
-                };
+                }
             }
 
-            // 로그인 상태일 때만 최근 검색 기록 저장
-            if (user && user.name) { // user.userId는 실제 사용자 정보 객체의 고유 ID 필드명으로 수정
+            // 로그인 상태 확인 및 최근 검색 기록 저장
+            if (user && user.name) {
                 const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
 
                 // Local Storage에 저장할 새로운 목록 생성
                 const currentHistory = JSON.parse(localStorage.getItem(userSearchHistoryKey)) || [];
                 const filteredHistory = currentHistory.filter(item => item !== query); // 중복 제거
                 const newHistory = [query, ...filteredHistory]; // 새로운 검색어 맨 앞에 추가
-                const limitedHistory = newHistory.slice(0, 10); // 예: 최대 10개까지 저장
+                const limitedHistory = newHistory.slice(0, 10); // 최대 10개
 
                 // 상태와 Local Storage 업데이트
-                setRecentSearches(limitedHistory); // 상태 업데이트
-                localStorage.setItem(userSearchHistoryKey, JSON.stringify(limitedHistory)); // Local Storage 저장
+                setRecentSearches(limitedHistory);
+                localStorage.setItem(userSearchHistoryKey, JSON.stringify(limitedHistory)); 
             }
             
             navigate('/response', { state: { searchTerm: searchTerm, user: user, result: result } });
             setSearchTerm("");
             
         } catch (error) {
-            console.error("검색 중 예상치 못한 오류 발생: ", error);
-            alert("검색 중 예상치 못한 오류가 발생했습니다.");
-            setIsLoading(false);
+            console.error('검색 중 네트워크 또는 기타 오류 발생:', error);
+            alert("검색 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
             return;
         } finally {
-            setIsLoading(false); // API 호출 완료 후 로딩 상태를 false로 설정
+            setIsLoading(false); // 로딩 상태 false
         }
     };
 
+
+    // 갤러리 아이템 클릭 (최근 검색어에는 반영하지 않음)
+    const handleItemClick = async (item) => {
+        if (!user) {
+            alert("로그인 후 이용하실 수 있습니다.");
+            return;
+        }
+        console.log(`${item.title} 클릭됨`, item);
+        setIsLoading(true); // API 호출 전 로딩 상태 true
+
+        try {
+            const result = await ApiClient.search(item.search, user.token);
+            console.log("검색결과: ", result);
+
+            // 오류 확인
+            if (result.status) {
+
+                if (result.status >= 400 && result.status <= 499) {
+                    alert('회원가입 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.');
+                    console.error("400 오류 발생: ", result);
+                    return;
+                } else if (result.status >= 500 && result.status <= 599) {
+                    alert('서버가 회원가입을 처리할 수 없는 상태입니다. 나중에 다시 시도해주세요.');
+                    console.error("500 오류 발생: ", result);
+                    return;
+                }
+            }
+
+            navigate('/response', { state: { searchTerm: item.title, user: user, result: result } });
+            setSearchTerm("");
+
+        } catch (error) {
+            console.error('검색 중 네트워크 또는 기타 오류 발생:', error);
+            alert("검색 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+            return;
+        } finally {
+            setIsLoading(false); // 로딩 상태 false
+        }
+    };
 
 
     const goToLogin = () => {
         navigate('/login');
     };
+    
     const goToSignUp = () => {
         navigate('/signUp');
     };
@@ -308,10 +299,10 @@ function SearchPage() {
 
             if (storedHistory) {
                 try {
-                setRecentSearches(JSON.parse(storedHistory));
+                    setRecentSearches(JSON.parse(storedHistory));
                 } catch (error) {
-                console.error("Failed to parse search history from localStorage", error);
-                setRecentSearches([]); // 오류 시 초기화
+                    console.error("localStorage에 최근 검색 기록 저장 실패", error);
+                    setRecentSearches([]); // 오류 시 초기화
                 }
             } else {
                 setRecentSearches([]); // 저장된 기록이 없을 경우 초기화
@@ -322,30 +313,30 @@ function SearchPage() {
     }, [user]);
 
 
-    // 목록 표시 상태
+    // 최근 검색어 표시 상태
     const [isHistoryVisible, setIsHistoryVisible] = useState(false);
     
-    // 포커스 시 목록 표시
+    // 포커스 시 최근 검색어 표시
     const handleInputFocus = () => {
         if (user && recentSearches.length > 0) {
         setIsHistoryVisible(true);
         }
     };
 
-    // 목록 숨김
+    // 최근 검색어 숨김
     const handleInputBlur = () => {
         setTimeout(() => {
         setIsHistoryVisible(false);
         }, 100); // 100ms 딜레이
     };
 
-    // 최근 검색어 클릭
+    // 최근 검색어 클릭 -> 검색창에 입력
     const handleRecentSearchClick = (item) => {
         setSearchTerm(item);
         setIsHistoryVisible(false);
     };
 
-        // ★ 최근 검색어 삭제 핸들러
+    // 최근 검색어 삭제
     const handleRemoveRecentSearchTerm = (event, itemToRemove) => {
         event.stopPropagation(); 
 
@@ -357,19 +348,18 @@ function SearchPage() {
 
         const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
 
-        // 제거할 항목을 필터링
+        // 삭제 항목을 배열에서 제외
         const updatedSearches = recentSearches.filter(item => item !== itemToRemove);
-        // 상태 업데이트
+        // 상태, localStorage 업데이트
         setRecentSearches(updatedSearches);
-        // localStorage 업데이트
         localStorage.setItem(userSearchHistoryKey, JSON.stringify(updatedSearches));
-        // 남은 항목이 없다면 목록 숨기기
+
         if (updatedSearches.length === 0) {
             setIsHistoryVisible(false);
         }
     };
 
-    // ★ 최근 검색어 전체 삭제 핸들러
+    // 최근 검색어 전체 삭제
     const handleClearAllSearches = () => {
 
         if (!user || !user.name) { 
@@ -378,9 +368,8 @@ function SearchPage() {
         }
 
         const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
-        // 상태 초기화 (빈 배열)
+        // 상태 초기화 (빈 배열) 및 해당 사용자 기록 삭제
         setRecentSearches([]);
-        // localStorage에서 해당 사용자 기록 삭제
         localStorage.removeItem(userSearchHistoryKey);
         // 목록 숨김
         setIsHistoryVisible(false);

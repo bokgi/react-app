@@ -28,10 +28,10 @@ const ResponsePage = () => {
 
     // result 식당 정보 / 출력할 추천 문장 -> 두 개의 배열로 변경
     try {
-    RestaurantList = result.filteredRestaurantList;
-    ResponseList = result.gptResponseList;
+        RestaurantList = result.filteredRestaurantList;
+        ResponseList = result.gptResponseList;
     } catch (error) {
-    console.error("JSON 파싱 중 오류 발생:", error);
+        console.error("JSON 파싱 중 오류 발생:", error);
     }
 
     // result 식당 정보를 리스트 형태로 저장
@@ -118,7 +118,7 @@ const ResponsePage = () => {
     };
 
     const handleLogout = () => {
-        logout(); // AuthContext의 logout 함수 호출
+        logout();
         alert("로그아웃 되었습니다.");
         navigate('/');
       };

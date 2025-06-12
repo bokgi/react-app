@@ -30,18 +30,7 @@ const KakaoCallbackPage = () => {
     const sendCodeToBackend = async (code) => {
 
         try {
-        const data = await ApiClient.KakaoLogin(code);
-        console.log(data);
-
-            if (data.status >= 400 && data.status <= 499) {
-                console.error(data.status + " 오류 발생: ", data);
-                alert('로그인 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
-                navigate('/login', { replace: true });
-            } else if (data.status >= 500 && data.status <= 599) {
-                console.error(data.status + " 오류 발생: ", data);
-                alert('서버가 로그인을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
-                navigate('/login', { replace: true });
-            }
+            const data = await ApiClient.KakaoLogin(code);
 
             if (data.success) {
                 
@@ -52,10 +41,18 @@ const KakaoCallbackPage = () => {
                     console.error('백엔드 카카오 로그인 처리 실패:', data.msg);
                     navigate('/login', { replace: true });
                 }
+
             } else {
-                console.error('백엔드 API 호출 실패:', data.msg || `Status ${data.status}`);
-                alert("카카오 로그인에 실패했습니다.\n나증에 다시 시도해주세요.")
-                navigate('/login', { replace: true });
+
+                if (data.status >= 400 && data.status <= 499) {
+                    console.error(data.status + " 오류 발생: ", data);
+                    alert('로그인 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    navigate('/login', { replace: true });
+                } else if (data.status >= 500 && data.status <= 599) {
+                    console.error(data.status + " 오류 발생: ", data);
+                    alert('서버가 로그인을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    navigate('/login', { replace: true });
+                }
             }
         } catch (error) {
             console.error('로그인 중 네트워크 또는 기타 오류 발생:', error);

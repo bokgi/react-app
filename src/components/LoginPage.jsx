@@ -24,7 +24,6 @@ const LoginPage = () => {
     };
 
 
-
     const handleLogin = async (e) => {
         e.preventDefault();
         const userCredentials = { id, password };
@@ -33,6 +32,8 @@ const LoginPage = () => {
 
         try {
             const response = await ApiClient.login(userCredentials);
+            console.log(response);
+            
 
             if (response.ok) {
                 const data = await response.json();

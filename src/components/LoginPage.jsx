@@ -132,7 +132,7 @@ const LoginPage = () => {
                 style={{ border: 'none', padding: 0, backgroundColor: 'transparent', cursor: 'pointer', display: 'block', width: 'auto' }}
             >
                 <img
-                    src="/images/kakao_login_large_wide.png"
+                    src="/images/kakao_login.png"
                     alt="카카오 로그인"
                     style={{ display: 'block', width: '100%', maxWidth: '400px', height: 'auto' }}
                 />

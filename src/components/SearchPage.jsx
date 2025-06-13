@@ -105,7 +105,7 @@ function SearchPage() {
 
             // 오류 확인
             if (!result.ok) {
-                if (result.status === 403) {
+                if (result.status == 403) {
                     alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
                     console.error(result.status + " 오류 발생: ", result);
                     logout();
@@ -171,7 +171,7 @@ function SearchPage() {
 
             // 오류 확인
             if (!result.ok) {
-                if (result.status === 403) {
+                if (result.status == 403) {
                     alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
                     console.error(result.status + " 오류 발생: ", result);
                     logout();

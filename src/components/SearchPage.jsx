@@ -105,7 +105,13 @@ function SearchPage() {
 
             // 오류 확인
             if (!result.ok) {
-                if (result.status >= 400 && result.status <= 499) {
+                if (result.status === 403) {
+                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    logout();
+                    navigate('/login');
+                    return;
+                } else if (result.status >= 400 && result.status <= 499) {
                     alert('검색 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
                     console.error(result.status + " 오류 발생: ", result);
                     return;
@@ -163,9 +169,15 @@ function SearchPage() {
         try {
             const result = await ApiClient.search(item.search, user.token);
 
-           // 오류 확인
+            // 오류 확인
             if (!result.ok) {
-                if (result.status >= 400 && result.status <= 499) {
+                if (result.status === 403) {
+                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    logout();
+                    navigate('/login');
+                    return;
+                } else if (result.status >= 400 && result.status <= 499) {
                     alert('검색 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
                     console.error(result.status + " 오류 발생: ", result);
                     return;

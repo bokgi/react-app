@@ -12,7 +12,7 @@ function SearchPage() {
     const { user, logout } = useAuth();
 
 
-    const totalBackgroundImages = 2;
+    const totalBackgroundImages = 6;
     const backgroundImageList = Array.from({ length: totalBackgroundImages }, (_, i) =>
         `/images/Search_background/bg${i + 1}.jpg`
     );

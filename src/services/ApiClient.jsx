@@ -79,6 +79,8 @@ class ApiClient {
         }
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
         
     static async addWish(restaurantId, token){ // 찜 목록 추가
 
@@ -115,9 +117,8 @@ class ApiClient {
                 },
 
             });
-
-            const result = await response.json();
-            return result;
+            
+            return response;
 
         } catch (error) {
             console.error('찜 목록을 불러오는 중 오류 발생:', error);
@@ -212,8 +213,7 @@ class ApiClient {
                 },
             });
 
-            const result = await response.json(); 
-            return result;
+            return response;
 
         } catch (error) {
             console.error('찜 목록을 불러오는 중 오류 발생:', error);

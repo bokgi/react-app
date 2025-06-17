@@ -169,36 +169,57 @@ const ResponsePage = () => {
                 setWishListLoading(false); 
                 return;
             }
-
             setWishListLoading(true);
+
             try {
                 const result = await ApiClient.viewWish(user.token); // 받아 온 사용자 찜 목록
 
-                if (result && Array.isArray(result)) {
-                    setUserWishList(result);
-                    console.log("사용자 찜 목록:", result);
+                // 오류 확인
+                if (!result.ok) {
+                    if (result.status == 403) {
+                        alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        logout();
+                        navigate('/login');
+                        return;
+                    } else if (result.status >= 400 && result.status <= 499) {
+                        alert('검색 결과를 처리하는 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        return;
+                    } else if (result.status >= 500 && result.status <= 599) {
+                        alert('서버가 검색 결과를 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        return;
+                    } else {
+                        alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        return;
+                    }
+                }
+
+                const response = await result.json();
+
+                if (response && Array.isArray(response)) {
+                    setUserWishList(response);
+                    console.log("사용자 찜 목록:", response);
                 } else {
-                    console.error('찜 목록 API 응답 형태가 예상과 다릅니다:', result);
+                    console.error('찜 목록 API 응답 형태가 예상과 다릅니다:', response);
                     setUserWishList([]);
+                    return;
                 }
 
             } catch (error) {
                 setUserWishList([]);
-                if (error.message.includes('403')) {
-                    alert('로그인이 만료되었거나 권한이 없습니다.');
-                    navigate('/login'); // 로그인 페이지로 리다이렉트
-                } else {
-                    alert('로그인이 만료되었습니다. 다시 로그인 해 주세요.');
-                    logout();
-                    navigate('/login');
-                }
+                console.error('찜 목록을 불러오는 중 네트워크 또는 기타 오류 발생:', error);
+                alert("검색 결과 처리 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+                return;
 
             } finally {
                 setWishListLoading(false); // 로딩 종료
             }
         };
 
-        // user 객체가 null이 아니게 될 때 이 effect가 실행되도록 함
+        // user 객체가 null이 아니게 될 때 이 effect가 실행
         if (user) {
             fetchUserWishList();
         }

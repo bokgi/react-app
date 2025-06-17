@@ -36,15 +36,33 @@ const SharePage = () => {
     const [wishListLoading, setWishListLoading] = useState(true); // 찜 목록 로딩 상태
     const [selectedRestaurantIndex, setSelectedRestaurantIndex] = useState(null); // 선택 목록 인덱스
 
-    //  찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
+    //  공유 링크 찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
     useEffect(() => {
         const fetchUserWishList = async () => {
 
             if (wishListToken) {
                 setWishListLoading(true);
                 try {
-                    
-                    const result = await ApiClient.ShareWish(wishListToken);
+                    const response = await ApiClient.ShareWish(wishListToken);
+
+                    if (!response.ok) {
+                        if (response.status >= 400 && response.status <= 499) {
+                            alert('목록을 불러오는 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                            console.error(response.status + " 오류 발생: ", response);
+                            return;
+                        } else if (response.status >= 500 && response.status <= 599) {
+                            alert('서버가 목록을 불러올 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                            console.error(response.status + " 오류 발생: ", response);
+                            return;
+                        } else {
+                            alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                            console.error(response.status + " 오류 발생: ", response);
+                            return;
+                        }
+                    }
+
+                    const result = await response.json(); 
+
                     console.log(result);
 
                     if (result && typeof result === 'object' && Array.isArray(result.wishList) && result.userName !== undefined) {
@@ -71,6 +89,8 @@ const SharePage = () => {
                 setUserWishList([]);
                 setUserName('');
                 setWishListLoading(false);
+                alert("잘못된 접근입니다. 홈페이지로 리디렉션합니다.");
+                navigate('/', { replace: true });
             }
         };
 

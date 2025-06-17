@@ -52,7 +52,7 @@ const WishListPage = () => {
     const [userWishList, setUserWishList] = useState([]); //  사용자의 찜 목록
     const [wishListLoading, setWishListLoading] = useState(true); // 찜 목록 로딩 상태
 
-     //  찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
+    //  찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
     useEffect(() => {
         const fetchUserWishList = async () => {
             
@@ -61,35 +61,57 @@ const WishListPage = () => {
                 setWishListLoading(false); 
                 return;
             }
-
             setWishListLoading(true);
+            
             try {
                 const result = await ApiClient.viewWish(user.token); // 받아 온 사용자 찜 목록
 
-                if (result && Array.isArray(result)) {
-                    setUserWishList(result);
-                    console.log("사용자 찜 목록:", result);
+                // 오류 확인
+                if (!result.ok) {
+                    if (result.status == 403) {
+                        alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        logout();
+                        navigate('/login');
+                        return;
+                    } else if (result.status >= 400 && result.status <= 499) {
+                        alert('찜 목록을 불러오는 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        return;
+                    } else if (result.status >= 500 && result.status <= 599) {
+                        alert('서버가 찜 목록을 불러올 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        return;
+                    } else {
+                        alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                        console.error(result.status + " 오류 발생: ", result);
+                        return;
+                    }
+                }
+
+                const response = await result.json();
+
+                if (response && Array.isArray(response)) {
+                    setUserWishList(response);
+                    console.log("사용자 찜 목록:", response);
                 } else {
-                    console.error('찜 목록 API 응답 형태가 예상과 다릅니다:', result);
+                    console.error('찜 목록 API 응답 형태가 예상과 다릅니다:', response);
                     setUserWishList([]);
+                    return;
                 }
 
             } catch (error) {
                 setUserWishList([]);
-                if (error.statusCode === 500) {
-                    alert('500 오류');
-                } else {
-                    alert('로그인이 만료되었습니다. 다시 로그인 해 주세요.');
-                    logout();
-                    navigate('/login')
-                }
+                console.error('찜 목록을 불러오는 중 네트워크 또는 기타 오류 발생:', error);
+                alert("찜 목록을 불러오는 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+                return;
 
             } finally {
                 setWishListLoading(false); // 로딩 종료
             }
         };
 
-        // user 객체가 null이 아니게 될 때 이 effect가 실행되도록 함
+        // user 객체가 null이 아니게 될 때 이 effect가 실행
         if (user) {
             fetchUserWishList();
         }
@@ -149,13 +171,6 @@ const WishListPage = () => {
         }
     };
 
-    // 특정 식당이 사용자의 찜 목록에 있는지 확인
-    const isRestaurantWished = (ListId) => {
-        if (wishListLoading) return false; 
-        if (!user) return false; 
-
-        return userWishList.some(item => item.restaurantId === ListId);
-    };
 
 
     const [selectedRestaurantIndex, setSelectedRestaurantIndex] = useState(null); // 선택된 목록 인덱스
@@ -295,8 +310,6 @@ const WishListPage = () => {
 
                             {/*  찜/찜 해제 버튼 */}
                             {user && !wishListLoading && restaurant.restaurantId !== undefined ? ( // restaurant 객체에 ID가 있는지 확인
-                                isRestaurantWished(restaurant.restaurantId) ? (
-                                    // 찜한 상태
                                     <button
                                         className="view-on-map-button"
                                         title="찜 목록에서 해제하기"
@@ -310,30 +323,18 @@ const WishListPage = () => {
                                         <img src="/images/icon/wish_on.png" width="50" height="50" />
                                     </button>
                                 ) : (
-                                    // 찜 안 한 상태, 목록에서 사라짐
+                                    // 비로그인 / 로딩 상태인 경우
                                     <button
                                         className="view-on-map-button"
-                                        title="찜 목록에 추가하기"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddWish(restaurant);
-                                        }}
+                                        disabled={true}
+                                        title={!user ? "로그인이 필요합니다" : (wishListLoading ? "찜 상태 로딩 중" : "ID 정보 없음")}
                                     >
+                                        { !user ? "찜" : "?"}
                                         <img src="/images/icon/wish_off.png" width="50" height="50" />
                                     </button>
-                                )
-                            ) : (
-                                // 비로그인 / 로딩 상태인 경우
-                                <button
-                                    className="view-on-map-button"
-                                    disabled={true}
-                                    title={!user ? "로그인이 필요합니다" : (wishListLoading ? "찜 상태 로딩 중" : "ID 정보 없음")}
-                                >
-                                    { !user ? "찜" : "?"} 
-                                    <img src="/images/icon/wish_off.png" width="50" height="50" />
-                                </button>
+                            
                             )}
-
+                            
                         </li>
 
                         {selectedRestaurantIndex === index && (

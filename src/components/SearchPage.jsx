@@ -129,7 +129,7 @@ function SearchPage() {
             const response = await result.json();
             console.log("검색 결과: ", response);
 
-            // 로그인 상태 확인 및 최근 검색 기록 저장
+            // 검색이 완료되면 최근 검색 기록 저장
             if (user && user.name) {
                 const userSearchHistoryKey = `recentSearches_${user.name}`; // 사용자별 고유 키
 

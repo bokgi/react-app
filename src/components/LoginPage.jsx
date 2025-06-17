@@ -46,7 +46,7 @@ const LoginPage = () => {
                 }
 
             } else {
-                let errorMessage = "예상치 못한 오류 발생";
+                let errorMessage = "예상치 못한 오류가 발생했습니다. 나중에 다시 시도해주세요.";
 
                 if (response.status >= 400 && response.status <= 499) {
                     errorMessage = '로그인 중 클라이언트 오류가 발생했습니다. 나중에 다시 시도해주세요.';

@@ -237,7 +237,30 @@ const ResponsePage = () => {
         }
 
         try {
-            await ApiClient.addWish(restaurant.id, user.token);
+            const result = await ApiClient.addWish(restaurant.id, user.token);
+
+            // 오류 확인
+            if (!result.ok) {
+                if (result.status == 403) {
+                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    logout();
+                    navigate('/login');
+                    return;
+                } else if (result.status >= 400 && result.status <= 499) {
+                    alert('찜 목록 추가 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else if (result.status >= 500 && result.status <= 599) {
+                    alert('서버가 찜 목록 추가를 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else {
+                    alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                }
+            }
 
             console.log("찜 추가 성공:", restaurant.name);
 
@@ -246,10 +269,12 @@ const ResponsePage = () => {
             alert(`${restaurant.name}을(를) 찜 목록에 추가했습니다.`);
 
         } catch (error) {
-            console.error('찜 추가 처리 중 오류 발생:', error);
-            alert('찜 추가에 실패했습니다.');
+            console.error('식당을 찜 목록에 추가하는 중 네트워크 또는 기타 오류 발생:', error);
+            alert("식당을 찜 목록에 추가하는 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+            return;
         }
     };
+
 
     // 찜 해제
     const handleRemoveWish = async (restaurant) => {
@@ -262,7 +287,30 @@ const ResponsePage = () => {
 
         try {
 
-            await ApiClient.deleteWish(restaurant.id, user.token);
+            const result = await ApiClient.deleteWish(restaurant.id, user.token);
+
+            // 오류 확인
+            if (!result.ok) {
+                if (result.status == 403) {
+                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    logout();
+                    navigate('/login');
+                    return;
+                } else if (result.status >= 400 && result.status <= 499) {
+                    alert('찜 목록 해제 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else if (result.status >= 500 && result.status <= 599) {
+                    alert('서버가 찜 목록 해제를 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else {
+                    alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                }
+            }
 
             console.log("찜 해제 성공:", restaurant.name);
 
@@ -273,10 +321,12 @@ const ResponsePage = () => {
             alert(`${restaurant.name}을(를) 찜 목록에서 제거했습니다.`);
 
         } catch (error) {
-            console.error('찜 해제 처리 중 오류 발생:', error);
-            alert('찜 해제에 실패했습니다.');
+            console.error('찜을 해제하는 중 네트워크 또는 기타 오류 발생:', error);
+            alert("찜을 해제하는 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+            return;
         }
     };
+
 
     // 특정 식당이 사용자의 찜 목록에 있는지 확인
     const isRestaurantWished = (ListId) => {
@@ -285,7 +335,6 @@ const ResponsePage = () => {
 
         return userWishList.some(item => item.restaurantId === ListId);
     };
-
 
 
 

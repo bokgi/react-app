@@ -97,6 +97,8 @@ class ApiClient {
                 }),
             });
 
+            return response;
+
         } catch (error) {
             console.error('찜 처리 중 오류 발생:', error);
             throw error;
@@ -142,6 +144,8 @@ class ApiClient {
                 }),
             });
 
+            return response;
+
         } catch (error) {
             console.error('찜 목록을 제거하는 중 오류 발생:', error);
             throw error;
@@ -165,6 +169,8 @@ class ApiClient {
                     restaurantId: restaurantId
                 }),
             });
+
+            return response;
 
         } catch (error) {
             console.error('주석을 저장하는 중 오류 발생:', error);
@@ -190,8 +196,7 @@ class ApiClient {
                 }),
             });
 
-            const result = await response.text();
-            return result;
+            return response;
 
         } catch (error) {
             console.error('찜 목록을 불러오는 중 오류 발생:', error);

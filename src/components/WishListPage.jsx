@@ -119,29 +119,6 @@ const WishListPage = () => {
     }, [user]);
 
 
-    // 찜 추가 - ResponcePage와 동일, 사용하지는 않음
-    const handleAddWish = async (restaurant) => {
-
-        if (!user) {
-            alert("로그인이 필요한 기능입니다.");
-            navigate('/login');
-            return;
-        }
-
-        try {
-            await ApiClient.addWish(restaurant.restaurantId, user.token);
-
-            console.log("찜 추가 성공:", restaurant.name);
-
-            setUserWishList(prevList => [...prevList, { restaurantId: restaurant.restaurantId }]);
-            
-            alert(`${restaurant.placeName}을(를) 찜 목록에 추가했습니다.`);
-
-        } catch (error) {
-            console.error('찜 추가 처리 중 오류 발생:', error);
-            alert('찜 추가에 실패했습니다.');
-        }
-    };
 
     // 찜 해제
     const handleRemoveWish = async (restaurant) => {
@@ -154,7 +131,30 @@ const WishListPage = () => {
 
         try {
 
-            await ApiClient.deleteWish(restaurant.restaurantId, user.token);
+            const result = await ApiClient.deleteWish(restaurant.restaurantId, user.token);
+
+            // 오류 확인
+            if (!result.ok) {
+                if (result.status == 403) {
+                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    logout();
+                    navigate('/login');
+                    return;
+                } else if (result.status >= 400 && result.status <= 499) {
+                    alert('찜 목록 해제 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else if (result.status >= 500 && result.status <= 599) {
+                    alert('서버가 찜 목록 해제를 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else {
+                    alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                }
+            }
 
             console.log("찜 해제 성공:", restaurant.placeName);
 
@@ -162,12 +162,13 @@ const WishListPage = () => {
                 return item.restaurantId !== restaurant.restaurantId;
             }));
 
-            alert(`${restaurant.placeName}을(를) 찜 목록에서 제거했습니다.`);
+            alert(`〔${restaurant.placeName}〕을(를) 찜 목록에서 제거했습니다.`);
 
 
         } catch (error) {
-            console.error('찜 해제 처리 중 오류 발생:', error);
-            alert('찜 해제에 실패했습니다.');
+            console.error('찜을 해제하는 중 네트워크 또는 기타 오류 발생:', error);
+            alert("찜을 해제하는 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+            return;
         }
     };
 
@@ -200,13 +201,36 @@ const WishListPage = () => {
         console.log(`주석 저장 시도: 식당 ID ${restaurantId}, 내용: ${annotationText}`);
 
         try {
+            const result = await ApiClient.addtext(restaurantId, annotationText, user.token);
+            
+            // 오류 확인
+            if (!result.ok) {
+                if (result.status == 403) {
+                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    logout();
+                    navigate('/login');
+                    return;
+                } else if (result.status >= 400 && result.status <= 499) {
+                    alert('메모 저장 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else if (result.status >= 500 && result.status <= 599) {
+                    alert('서버가 메모 저장을 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else {
+                    alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                }
+            }
 
-            await ApiClient.addtext(restaurantId, annotationText, user.token);
             console.log(`주석 저장 성공: 식당 ID ${restaurantId}`);
-            // 서버 응답에 따라 userWishList의 해당 항목을 다시 업데이트하는 로직을 추가할 수도 있습니다.
         } catch (error) {
-            console.error(`주석 저장 중 오류 발생: 식당 ID ${restaurantId}`, error);
-            alert('주석 저장에 실패했습니다.');
+            console.error('메모 저장 중 네트워크 또는 기타 오류 발생:', error);
+            alert("메모를 저장하는 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+            return;
         }
     };
  
@@ -214,13 +238,41 @@ const WishListPage = () => {
     // 찜 목록 링크 복사
     const handleCopyToken = async (token) => {
         try {
-            const wishListToken = await ApiClient.WishListToken(token);
+            const result = await ApiClient.WishListToken(token);
+
+            // 오류 확인
+            if (!result.ok) {
+                if (result.status == 403) {
+                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    logout();
+                    navigate('/login');
+                    return;
+                } else if (result.status >= 400 && result.status <= 499) {
+                    alert('공유 링크를 복사하는 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else if (result.status >= 500 && result.status <= 599) {
+                    alert('서버가 링크를 처리할 수 없는 상태입니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                } else {
+                    alert('예상치 못한 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
+                    console.error(result.status + " 오류 발생: ", result);
+                    return;
+                }
+            }
+
+            const wishListToken = await result.text();
+
             const linkToCopy = 'http://14.63.178.159/wish/share?token=' + wishListToken;
             ClipboardJS.copy(linkToCopy);
             alert(user.name + '님의 찜 목록 공유 링크가 클립보드에 복사되었습니다.');
-        } catch (err) {
-            alert('공유 링크 복사에 실패했습니다.');
-            console.error('Failed to copy text: ', err);
+
+        } catch (error) {
+            console.error('링크 복사 중 네트워크 또는 기타 오류 발생:', error);
+            alert("공유 링크를 복사하는 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+            return;;
         }
     };
     
@@ -308,7 +360,7 @@ const WishListPage = () => {
                             </button>
 
 
-                            {/*  찜/찜 해제 버튼 */}
+                            {/* 찜 해제 버튼 */}
                             {user && !wishListLoading && restaurant.restaurantId !== undefined ? ( // restaurant 객체에 ID가 있는지 확인
                                     <button
                                         className="view-on-map-button"

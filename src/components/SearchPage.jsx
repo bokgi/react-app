@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "../css/SearchPage.css";
 import { useAuth } from '../contexts/AuthContext.jsx';
 import ApiClient from '../services/ApiClient';
@@ -12,7 +12,7 @@ function SearchPage() {
     const { user, logout } = useAuth();
 
 
-    const totalBackgroundImages = 5;
+    const totalBackgroundImages = 6;
     const backgroundImageList = Array.from({ length: totalBackgroundImages }, (_, i) =>
         `/images/Search_background/bg${i + 1}.jpg`
     );

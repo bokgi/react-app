@@ -528,8 +528,8 @@ function SearchPage() {
 
             <div className="bottonRow" doz_type="row" doz_grid="12">
                 <span>&nbsp;</span>
-                <span><p>Copyright ⓒ Jeon Min-Gyu / Shin bok-gi, All Rights Reserved </p></span>
-                <span><p>해당 사이트는 비영리 무료공유 사이트입니다. 전체 화면 사용을 권장합니다.</p></span>
+                <span><p className="Copyright">Copyright ⓒ Jeon min-gyu / Shin bok-gi, All Rights Reserved </p></span>
+                <span><p className="Copyright">해당 사이트는 비영리 무료공유 사이트입니다. 전체 화면 사용을 권장합니다.</p></span>
                 <span>&nbsp;</span>
             </div>
 

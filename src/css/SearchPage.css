@@ -249,7 +249,7 @@ body {
     font-size: 3em;
     color: #ff3c00;
     font-family: Jua, sans-serif;
-    margin: 25px;
+    margin: 30px;
 }
 
 .item-gallery h3 {
@@ -495,11 +495,12 @@ body {
    사이트 bottom
    ==================== */
 .bottonRow {
-    background-color: rgb(255, 123, 0);
+    background-color: #ff7b00e0;
     width: 100%;
     text-align: center;
     color: #000;
     font-weight: bold;
+    font-family: Nanum Gothic, sans-serif;
 }
 .bottonRow span{
     height: 5px;
@@ -670,3 +671,4 @@ body {
 .remove-search-button:focus {
     outline: none;
 }
+

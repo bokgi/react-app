@@ -153,11 +153,11 @@ body {
 }
 
 .sub-title {
-    font-size: 3em;
+    font-size: 2.6em;
     margin-bottom: 150px;
     color: #ff3c00;
     font-weight: bold;
-    font-family: Jua, sans-serif;
+    font-family: noto sans KR, sans-serif;
 }
 
 /* ====================
@@ -233,7 +233,7 @@ body {
    아이템 갤러리 스타일
    ==================== */
 .item-gallery {
-    margin-top: 40vh;
+    margin-top: 50vh;
     margin-bottom: 250px;
     width: 100%;
     max-width: 1100px; /* 갤러리 최대 너비 */

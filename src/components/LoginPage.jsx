@@ -139,7 +139,7 @@ const LoginPage = () => {
             </button>
 
             <button type="button" onClick={goToSignup} className='goToSignupButton'>
-                아직 계정이 없으신가요? 회원가입하기
+                아직 계정이 없으신가요?&nbsp;&nbsp;회원가입하기
             </button>
         </form>
     </div>

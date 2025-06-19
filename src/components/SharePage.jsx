@@ -7,11 +7,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 const SharePage = () => {
 
     const [searchParams] = useSearchParams();
-    const wishListToken = searchParams.get('token'); //  쿼리 파라미터 값, token으로 변경 가능
+    const wishListToken = searchParams.get('token'); //  쿼리 파라미터
 
     const navigate = useNavigate();
 
-    // 쿼리 파라미터가 없는 경우 홈페이지 리디렉션
+    // 쿼리 파라미터가 없는 경우 리디렉션
     useEffect(() => {
         if (!wishListToken) {
             console.warn("잘못된 접근입니다. 홈페이지로 리디렉션합니다.");
@@ -36,7 +36,7 @@ const SharePage = () => {
     const [wishListLoading, setWishListLoading] = useState(true); // 찜 목록 로딩 상태
     const [selectedRestaurantIndex, setSelectedRestaurantIndex] = useState(null); // 선택 목록 인덱스
 
-    //  공유 링크 찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
+    // 공유 링크 찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
     useEffect(() => {
         const fetchUserWishList = async () => {
 

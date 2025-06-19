@@ -147,7 +147,7 @@ const SignupPage = () => {
                 <input type="text" placeholder="이름" value={name} onChange={handleNameChange} className='input' required />
 
                 <button type="submit" className='button'>회원가입</button>
-                <button type="button" onClick={GoToLogin} className='goToLoginButton'>이미 계정이 있으신가요? 로그인하기</button>
+                <button type="button" onClick={GoToLogin} className='goToLoginButton'>이미 계정이 있으신가요?&nbsp;&nbsp;로그인하기</button>
                 
             </form>
 

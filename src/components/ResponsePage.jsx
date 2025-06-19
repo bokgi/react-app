@@ -336,6 +336,12 @@ const ResponsePage = () => {
         return userWishList.some(item => item.restaurantId === ListId);
     };
 
+    const [imageError, setImageError] = useState(false);
+
+    const handleImageError = () => {
+        setImageError(true);
+    };
+
 
 
 
@@ -425,11 +431,20 @@ const ResponsePage = () => {
                             onClick={() => handleListItemClick(index)} // 목록 항목 클릭
                         >
                             <div className="restaurant-image">
-                                {restaurant.imgUrl ? (
-                                    <img className="existing-image" src={restaurant.imgUrl} alt="식당 이미지" />
+                                {restaurant.imgUrl && !imageError ? (
+                                    <img
+                                        className="existing-image"
+                                        src={restaurant.imgUrl}
+                                        alt="식당 이미지"
+                                        onError={handleImageError} // 이미지 로딩 오류 발생 시 handleImageError 함수 호출
+                                    />
                                 ) : (
-                                    <img className="null-image" src="/images/icon/image_null.png"/>
-                                )} 
+                                    <img
+                                        className="null-image"
+                                        src="/images/icon/image_null.png"
+                                        alt="이미지 없음" // 대체 이미지에도 alt 속성을 추가하는 것이 좋습니다.
+                                    />
+                                )}
                             </div>
 
                             <div className="restaurant-item-content" title={"〔" + restaurant.name + "〕" + " / " + restaurant.rating + " / " + restaurant.address + " / " + (restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone)}>

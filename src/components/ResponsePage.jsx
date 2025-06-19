@@ -335,12 +335,19 @@ const ResponsePage = () => {
 
         return userWishList.some(item => item.restaurantId === ListId);
     };
+    
 
-    const [imageLoadError, setImageLoadError] = useState(false);
+    const [imageLoadError, setImageLoadError] = React.useState({});
 
-    const handleImageError = () => {
-        setImageLoadError(true);
+    // 이미지 로딩 실패
+    const handleImageError = (index) => {
+    setImageLoadError(prevErrors => ({
+        ...prevErrors,
+        [index]: true // 해당 인덱스의 이미지 로딩 실패 상태를 true로 설정
+    }));
     };
+
+    
 
 
   return (
@@ -429,21 +436,18 @@ const ResponsePage = () => {
                             onClick={() => handleListItemClick(index)} // 목록 항목 클릭
                         >
                             <div className="restaurant-image">
-                                {restaurant.imgUrl && !imageLoadError ? (
+                                {restaurant.imgUrl && !imageLoadError[index] ? (
                                     <img
                                         className="existing-image"
                                         src={restaurant.imgUrl}
                                         alt="식당 이미지"
-                                        onError={handleImageError} // 이미지 로드 실패 시 handleImageError 함수 호출
+                                        onError={() => handleImageError(index)} // 이미지 로딩 실패 시
                                     />
                                 ) : (
-                                    <img
-                                        className="null-image"
-                                        src="/images/icon/image_null.png"
-                                        alt="이미지 없음" // alt 텍스트 추가 권장
-                                    />
+                                    <img className="null-image" src="/images/icon/image_null.png" alt="이미지 없음" />
                                 )}
                             </div>
+
 
                             <div className="restaurant-item-content" title={"〔" + restaurant.name + "〕" + " / " + restaurant.rating + " / " + restaurant.address + " / " + (restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone)}>
                             <strong className="restaurant_name">

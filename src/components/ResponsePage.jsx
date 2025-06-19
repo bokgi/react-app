@@ -448,7 +448,6 @@ const ResponsePage = () => {
                                 )}
                             </div>
 
-
                             <div className="restaurant-item-content" title={"〔" + restaurant.name + "〕" + " / " + restaurant.rating + " / " + restaurant.address + " / " + (restaurant.phone === null ? "저장된 연락처 없음" : restaurant.phone)}>
                             <strong className="restaurant_name">
                                 〔&nbsp;{restaurant.name || `위치 ${index + 1}`}&nbsp;〕

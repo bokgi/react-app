@@ -200,7 +200,7 @@ function SearchPage() {
 
         } catch (error) {
             console.error('검색 중 네트워크 또는 기타 오류 발생:', error);
-            alert("검색 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인해주세요.");
+            alert("검색 중 예상치 못한 오류가 발생했습니다.\n네트워크 연결 상태를 확인하시고, 검색 중 새로고침하지 마세요.");
             return;
         } finally {
             setIsLoading(false); // 로딩 상태 false

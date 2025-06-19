@@ -37,7 +37,7 @@ const WishListPage = () => {
     // 새 창으로 카카오맵 열기
     const openKakaoMapInNewWindow = (restaurant) => {
         // 카카오맵 URL (이름 검색 상태)
-        const encodedPlaceName = encodeURIComponent(restaurant.placeName);
+        const encodedPlaceName = encodeURIComponent(restaurant.address + " " + restaurant.placeName);
         const kakaoMapUrl = `https://map.kakao.com/?q=${encodedPlaceName}`;
         window.open(kakaoMapUrl, '_blank');
     };
@@ -52,7 +52,7 @@ const WishListPage = () => {
     const [userWishList, setUserWishList] = useState([]); //  사용자의 찜 목록
     const [wishListLoading, setWishListLoading] = useState(true); // 찜 목록 로딩 상태
 
-    //  찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
+    //  찜 목록 불러오기 / address, description, imgUrl, phone, placeName, placeUrl, rating, restaurantId, userId
     useEffect(() => {
         const fetchUserWishList = async () => {
             

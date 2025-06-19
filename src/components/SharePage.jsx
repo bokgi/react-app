@@ -21,7 +21,7 @@ const SharePage = () => {
 
 
     const openKakaoMapInNewWindow = (restaurant) => {
-        const encodedPlaceName = encodeURIComponent(restaurant.placeName);
+        const encodedPlaceName = encodeURIComponent(restaurant.address + " " + restaurant.placeName);
         const kakaoMapUrl = `https://map.kakao.com/?q=${encodedPlaceName}`;
         window.open(kakaoMapUrl, '_blank');
     };
@@ -36,7 +36,7 @@ const SharePage = () => {
     const [wishListLoading, setWishListLoading] = useState(true); // 찜 목록 로딩 상태
     const [selectedRestaurantIndex, setSelectedRestaurantIndex] = useState(null); // 선택 목록 인덱스
 
-    // 공유 링크 찜 목록 불러오기 / address, description, ingUrl, phone, placeName, placeUrl, rating, restaurantId, userId
+    // 공유 링크 찜 목록 불러오기 / address, description, imgUrl, phone, placeName, placeUrl, rating, restaurantId, userId
     useEffect(() => {
         const fetchUserWishList = async () => {
 

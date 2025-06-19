@@ -37,6 +37,7 @@ const WishListPage = () => {
     // 새 창으로 카카오맵 열기
     const openKakaoMapInNewWindow = (restaurant) => {
         // 카카오맵 URL (이름 검색 상태)
+        console.log(restaurant);
         const encodedPlaceName = encodeURIComponent(restaurant.address + " " + restaurant.placeName);
         const kakaoMapUrl = `https://map.kakao.com/?q=${encodedPlaceName}`;
         window.open(kakaoMapUrl, '_blank');

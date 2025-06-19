@@ -21,6 +21,7 @@ const SharePage = () => {
 
 
     const openKakaoMapInNewWindow = (restaurant) => {
+        console.log(restaurant);
         const encodedPlaceName = encodeURIComponent(restaurant.address + " " + restaurant.placeName);
         const kakaoMapUrl = `https://map.kakao.com/?q=${encodedPlaceName}`;
         window.open(kakaoMapUrl, '_blank');

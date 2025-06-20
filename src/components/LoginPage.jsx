@@ -76,7 +76,7 @@ const LoginPage = () => {
 
 
     const KAKAO_REST_API_KEY = '55d2a867b5b86ca3c3b738518c2e03c5';
-    const KAKAO_REDIRECT_URI = 'http://matgpt.p-e.kr/kakao';
+    const KAKAO_REDIRECT_URI = 'https://matgpt.p-e.kr/kakao';
     // 카카오 인증 서버로 요청할 URL
     const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
 

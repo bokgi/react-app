@@ -265,7 +265,7 @@ const WishListPage = () => {
 
             const wishListToken = await result.text();
 
-            const linkToCopy = 'http://14.63.178.159/wish/share?token=' + wishListToken;
+            const linkToCopy = 'https://matgpt.p-e.kr/wish/share?token=' + wishListToken;
             ClipboardJS.copy(linkToCopy);
             alert(user.name + '님의 찜 목록 공유 링크가 클립보드에 복사되었습니다.');
 

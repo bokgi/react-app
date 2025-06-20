@@ -46,7 +46,12 @@ const SharePage = () => {
                     const response = await ApiClient.ShareWish(wishListToken);
 
                     if (!response.ok) {
-                        if (response.status >= 400 && response.status <= 499) {
+                        if (response.status == 500) {
+                            alert('올바르지 않은 링크입니다.\n발급된 링크를 다시 확인하시거나, 재발급해 주세요.');
+                            console.error(response.status + " 오류 발생: ", response);
+                            navigate('/', { replace: true });
+                            return;
+                        } else if (response.status >= 400 && response.status <= 499) {
                             alert('목록을 불러오는 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
                             console.error(response.status + " 오류 발생: ", response);
                             return;

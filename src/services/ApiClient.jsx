@@ -1,8 +1,7 @@
 class ApiClient {
 
     static SERVER_URL1 = "http://localhost:8083";
-    static SERVER_URL2 = "http://14.63.178.159";
-    static SERVER_URL = "http://matgpt.kro.kr";
+    static SERVER_URL = "http://14.63.178.159";
 
     static async signUp(user) {
         

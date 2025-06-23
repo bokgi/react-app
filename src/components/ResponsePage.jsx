@@ -126,6 +126,9 @@ const ResponsePage = () => {
     const goToLogin = () => {
         navigate('/login');
     };
+    const goToSignUp = () => {
+        navigate('/signUp');
+    };
     const goToSearch = () => {
         navigate('/');
     };
@@ -365,6 +368,7 @@ const ResponsePage = () => {
             ) : ( // user 객체가 null인 경우 (로그인 상태가 아님)
                 <>
                 <button className="logout-button" onClick={goToLogin}>로그인</button>
+                <button className="logout-button" onClick={goToSignUp}>회원가입</button>
                 </>
             )}
             </div>
@@ -513,10 +517,12 @@ const ResponsePage = () => {
                                 // 비로그인 / 로딩 상태인 경우
                                 <button
                                     className="view-on-map-button"
-                                    disabled={true}
                                     title={!user ? "로그인이 필요합니다" : (wishListLoading ? "찜 상태 로딩 중" : "ID 정보 없음")}
-                                >
-                                    { !user ? "찜" : "?"} 
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAddWish(restaurant);
+                                    }}
+                                > 
                                     <img src="/images/icon/wish_off.png" width="50" height="50" />
                                 </button>
                             )}

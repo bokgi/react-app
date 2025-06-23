@@ -54,7 +54,7 @@ class ApiClient {
     }
 
     
-    static async search(searchTerm, token){
+    static async search(searchTerm){
 
         const input = searchTerm;
         const searchEndpoint = ApiClient.SERVER_URL + "/api/gpt" + "/input";
@@ -64,7 +64,6 @@ class ApiClient {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     input: input,

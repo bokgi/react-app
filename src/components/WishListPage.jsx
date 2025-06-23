@@ -12,7 +12,6 @@ const WishListPage = () => {
     const { user, logout } = useAuth();
 
     useEffect(() => {
-
         if (!user) {
             alert("잘못된 접근입니다. 검색 페이지로 이동합니다.");
             navigate('/', { replace: true });

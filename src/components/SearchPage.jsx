@@ -70,8 +70,7 @@ function SearchPage() {
         }
     };
 
-
-    // 로그인 상태 확인
+    // 최근 검색어 클릭
     const handleInputChange = (event) => {
         if (!user) {
             alert('로그인 후 검색하실 수 있습니다.');
@@ -84,13 +83,10 @@ function SearchPage() {
     const [isLoading, setIsLoading] = useState(false);
 
 
-    // 검색 
+    // 직접 검색 
     const handleSearchSubmit = async (event) => {
         event.preventDefault();
-        if (!user) {
-            alert("로그인 후 검색하실 수 있습니다.");
-            return;
-        }
+
         if (searchTerm.length < 2) {
             alert("두 글자 이상의 검색이 필요합니다");
             return;
@@ -101,17 +97,11 @@ function SearchPage() {
         const query = searchTerm.trim();
 
         try {
-            const result = await ApiClient.search(searchTerm, user.token);
+            const result = await ApiClient.search(searchTerm);
 
             // 오류 확인
             if (!result.ok) {
-                if (result.status == 403) {
-                    alert('로그인이 만료되었습니다.\n다시 로그인 해 주시기 바랍니다.');
-                    console.error(result.status + " 오류 발생: ", result);
-                    logout();
-                    navigate('/login');
-                    return;
-                } else if (result.status >= 400 && result.status <= 499) {
+                if (result.status >= 400 && result.status <= 499) {
                     alert('검색 중 클라이언트 오류가 발생했습니다.\n나중에 다시 시도해주세요.');
                     console.error(result.status + " 오류 발생: ", result);
                     return;
@@ -144,7 +134,7 @@ function SearchPage() {
                 localStorage.setItem(userSearchHistoryKey, JSON.stringify(limitedHistory)); 
             }
             
-            navigate('/response', { state: { searchTerm: searchTerm, user: user, result: response } });
+            navigate('/response', { state: { searchTerm: searchTerm, result: response } });
             setSearchTerm("");
             
         } catch (error) {
@@ -167,7 +157,7 @@ function SearchPage() {
         setIsLoading(true); // API 호출 전 로딩 상태 true
 
         try {
-            const result = await ApiClient.search(item.search, user.token);
+            const result = await ApiClient.search(item.search);
 
             // 오류 확인
             if (!result.ok) {
@@ -438,7 +428,7 @@ function SearchPage() {
                 <input
                     type="text"
                     className="search-input"
-                    placeholder={user ? "주변 맛집을 검색해보세요!  ex) 혼밥하기 좋은 음식점" : "로그인 후 검색해보세요!"}
+                    placeholder={"주변 맛집을 검색해보세요!  ex) 혼밥하기 좋은 음식점"}
                     value={searchTerm}
                     onChange={handleInputChange}
                     onFocus={handleInputFocus} 

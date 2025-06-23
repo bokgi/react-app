@@ -429,7 +429,7 @@ function SearchPage() {
 
             <div className="title-section">
             <h1 className="main-title">맛 GPT</h1>
-            <p className="sub-title">-&nbsp;&nbsp;AI와 함께하는 리뷰 데이터 기반 맛집 탐방&nbsp;&nbsp;-</p>
+            <p className="sub-title">AI와 함께하는 성북구 맛집 탐방</p>
             </div>
         
             <div className="container">

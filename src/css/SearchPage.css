@@ -160,6 +160,19 @@ body {
     font-family: noto sans KR, sans-serif;
 }
 
+.sub-title::before {
+            content: '📌'; /* 핀 이모지 */
+            position: absolute;
+            left: -10px; /* 테두리 밖으로 살짝 나오게 */
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            background-color: #2980b9;
+            padding: 5px;
+            border-radius: 50%;
+            line-height: 1; /* 이모지 정렬 */
+        }
+
 /* ====================
    search-form
    ==================== */

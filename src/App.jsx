@@ -43,8 +43,7 @@ function App() {
             <Route path="/" element={<SearchPage />} />
             {/* 결과 페이지 */}
             <Route
-                path="/response"
-                element={<ProtectedRoute element={<ResponsePage />} />}
+                path="/response" element={<ResponsePage />}
             />
             {/* 찜 목록 페이지 */}
             <Route

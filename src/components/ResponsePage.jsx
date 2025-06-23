@@ -235,7 +235,6 @@ const ResponsePage = () => {
 
         if (!user) {
             alert("로그인이 필요한 기능입니다.");
-            navigate('/login');
             return;
         }
 

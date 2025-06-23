@@ -70,12 +70,7 @@ function SearchPage() {
         }
     };
 
-    // 최근 검색어 클릭
     const handleInputChange = (event) => {
-        if (!user) {
-            alert('로그인 후 검색하실 수 있습니다.');
-            return;
-        }
         setSearchTerm(event.target.value);
     };
 

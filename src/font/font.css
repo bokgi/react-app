@@ -1,6 +1,32 @@
+/* src/font/font.css */
+
 @font-face {
-  font-family: 'Gong'; /* 사용할 폰트의 이름 (원하는 대로 지정) */
-  src: url('/NLP-project/public/fonts/Gong%20Gothic%20Bold.ttf') format('truetype'); /* 폰트 파일 경로 및 형식 */
-  font-weight: normal; /* 폰트의 굵기 */
-  font-style: normal; /* 폰트의 스타일 */
+    font-family: 'esamanru';
+    font-weight: 300; /* Light */
+    font-style: normal;
+    font-display: swap; /* 폰트 로딩 전략 */
+    src: url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Light.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Light.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Light.otf') format('opentype'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Light.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'esamanru';
+    font-weight: 500; /* Medium */
+    font-style: normal;
+    font-display: swap;
+    src: url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Medium.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Medium.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Medium.otf') format('opentype'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Medium.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'esamanru';
+    font-weight: 700; /* Bold */
+    font-style: normal;
+    font-display: swap;
+    src: url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Bold.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Bold.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Bold.otf') format('opentype'),
+         url('https://cdn.jsdelivr.net/gh/fonts-archive/esamanru/esamanru-Bold.ttf') format('truetype');
 }

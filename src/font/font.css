@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Gong'; /* 사용할 폰트의 이름 (원하는 대로 지정) */
-  src: url('../../public/fonts/esamanru\ Bold.ttf') format('truetype'); /* 폰트 파일 경로 및 형식 */
+  src: url('/NLP-project/public/fonts/esamanru\ Bold.ttf') format('truetype'); /* 폰트 파일 경로 및 형식 */
   font-weight: normal; /* 폰트의 굵기 */
   font-style: normal; /* 폰트의 스타일 */
 }
